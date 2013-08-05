@@ -1,4 +1,4 @@
-package com.entrocorp.linearlogic.oitc;
+package com.entrocorp.linearlogic.oneinthechamber;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
