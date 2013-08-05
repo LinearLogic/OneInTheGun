@@ -8,10 +8,14 @@ public class OITC extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
+        logInfo("Loading the config...");
+        saveDefaultConfig();
         logInfo("Successfully enabled. Game on!");
     }
 
     public void onDisable() {
+        logInfo("Saving the config...");
+        saveConfig();
         logInfo("Successfully disabled. Game over!");
         instance = null;
     }
