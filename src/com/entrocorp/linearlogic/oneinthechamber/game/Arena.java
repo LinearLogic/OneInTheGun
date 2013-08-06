@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.entrocorp.linearlogic.oneinthechamber.OITC;
 import com.entrocorp.linearlogic.oneinthechamber.util.Pair;
@@ -29,6 +33,9 @@ public class Arena implements Serializable {
     private SerializableLocation lobby;
     private ArrayList<SerializableLocation> spawns;
     private ArrayList<SerializableLocation> signLocations;
+
+    private transient Scoreboard board;
+    private transient Objective objective;
 
     private transient TriMap<Player, Integer, Integer> playerData;
 
@@ -49,6 +56,10 @@ public class Arena implements Serializable {
         if (signLocations == null)
             signLocations = new ArrayList<SerializableLocation>();
         playerData = new TriMap<Player, Integer, Integer>();
+        board = OITC.instance.getServer().getScoreboardManager().getNewScoreboard();
+        objective = board.registerNewObjective("kills", "totalKillCount");
+        objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "Ç Kills È");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
     public void save() {
@@ -215,5 +226,19 @@ public class Arena implements Serializable {
             }
         }
         return killer;
+    }
+
+    public void loadScoreboard() {
+        for (Player player : playerData.keySet()) {
+            objective.getScore(player).setScore(0);
+            player.setScoreboard(board);
+        }
+    }
+
+    public void closeScoreboard() {
+        for (Player player : playerData.keySet()) {
+            board.resetScores(player);
+            player.setScoreboard(OITC.instance.getServer().getScoreboardManager().getNewScoreboard());
+        }
     }
 }
