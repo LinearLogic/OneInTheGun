@@ -186,8 +186,17 @@ public class Arena implements Serializable {
     }
 
     public void populateSigns() {
-        for (SerializableLocation sloc : signLocations)
-            populateSign(sloc.asBukkitLocation());
+        for (SerializableLocation sloc : signLocations) {
+            Block block = sloc.asBukkitLocation().getBlock();
+            if (!block.getType().equals(Material.SIGN_POST) && !block.getType().equals(Material.WALL_SIGN))
+                continue;
+            Sign sign = (Sign) block.getState();
+            sign.setLine(0, name);
+            sign.setLine(1, null);
+            sign.setLine(2, "stage"); // TODO implement stages
+            sign.setLine(3, playerData.size() + "/" + playerLimit);
+            sign.update();
+        }
     }
 
     public boolean wipeSign(Location loc) {
@@ -205,8 +214,16 @@ public class Arena implements Serializable {
     }
 
     public void wipeSigns() {
-        for (SerializableLocation sloc : signLocations)
-            wipeSign(sloc.asBukkitLocation());
+        for (SerializableLocation sloc : signLocations) {
+            Block block = sloc.asBukkitLocation().getBlock();
+            if (!block.getType().equals(Material.SIGN_POST) && !block.getType().equals(Material.WALL_SIGN))
+                continue;
+            Sign sign = (Sign) block.getState();
+            sign.setLine(0, null);
+            sign.setLine(1, null);
+            sign.setLine(2, null);
+            sign.setLine(3, null);
+        }
     }
     public Player[] getPlayers() {
         return playerData.keySet().toArray(new Player[playerData.size()]);
