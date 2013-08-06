@@ -11,6 +11,9 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -149,20 +152,68 @@ public class Arena implements Serializable {
         return signLocations.contains(new SerializableLocation(loc));
     }
 
-    public void addSignLocation(Location loc) {
-        signLocations.add(new SerializableLocation(loc));
+    public boolean addSignLocation(Location loc) {
+        SerializableLocation sloc = new SerializableLocation(loc);
+        if (signLocations.contains(sloc))
+            return false;
+        signLocations.add(sloc);
+        populateSign(loc);
+        return true;
     }
 
     public boolean removeSignLocation(Location loc) {
+        wipeSign(loc);
         return signLocations.remove(new SerializableLocation(loc));
     }
-
+    
     public void clearSignLocations() {
+        wipeSigns();
         signLocations.clear();
     }
 
+    public boolean populateSign(Location loc) {
+        if (!signLocations.contains(new SerializableLocation(loc)))
+            return false;
+        Block block = loc.getBlock();
+        if (!block.getType().equals(Material.SIGN_POST) && !block.getType().equals(Material.WALL_SIGN))
+            return false;
+        Sign sign = (Sign) block.getState();
+        sign.setLine(0, name);
+        sign.setLine(1, null);
+        sign.setLine(2, "stage"); // TODO implement stages
+        sign.setLine(3, playerData.size() + "/" + playerLimit);
+        return sign.update();
+    }
+
+    public void populateSigns() {
+        for (SerializableLocation sloc : signLocations)
+            populateSign(sloc.asBukkitLocation());
+    }
+
+    public boolean wipeSign(Location loc) {
+        if (!signLocations.contains(new SerializableLocation(loc)))
+            return false;
+        Block block = loc.getBlock();
+        if (!block.getType().equals(Material.SIGN_POST) && !block.getType().equals(Material.WALL_SIGN))
+            return false;
+        Sign sign = (Sign) block.getState();
+        sign.setLine(0, null);
+        sign.setLine(1, null);
+        sign.setLine(2, null);
+        sign.setLine(3, null);
+        return sign.update();
+    }
+
+    public void wipeSigns() {
+        for (SerializableLocation sloc : signLocations)
+            wipeSign(sloc.asBukkitLocation());
+    }
     public Player[] getPlayers() {
         return playerData.keySet().toArray(new Player[playerData.size()]);
+    }
+
+    public int getPlayerCount() {
+        return playerData.size();
     }
 
     public boolean containsPlayer(Player player) {
