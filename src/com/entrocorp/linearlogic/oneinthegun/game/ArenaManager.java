@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -40,6 +41,49 @@ public class ArenaManager {
 
     public Arena[] getArenas() {
         return arenas.toArray(new Arena[arenas.size()]);
+    }
+
+    public Arena[] getClosedArenas() {
+        int counter = 0;
+        Arena[] matches = new Arena[arenas.size()];
+        for (Arena arena : arenas)
+            if (arena.isClosed())
+                matches[counter++] = arena;
+        return Arrays.copyOf(matches, counter);
+    }
+
+    public Arena[] getWaitingArenas() {
+        int counter = 0;
+        Arena[] matches = new Arena[arenas.size()];
+        for (Arena arena : arenas)
+            if (!arena.isIngame())
+                matches[counter++] = arena;
+        return Arrays.copyOf(matches, counter);
+    }
+
+    public Arena[] getIngameArenas() {
+        int counter = 0;
+        Arena[] matches = new Arena[arenas.size()];
+        for (Arena arena : arenas)
+            if (arena.isIngame())
+                matches[counter++] = arena;
+        return Arrays.copyOf(matches, counter);
+    }
+
+    public Arena[] getEmptyArenas() {
+        int counter = 0;
+        Arena[] matches = new Arena[arenas.size()];
+        for (Arena arena : arenas)
+            if (arena.getPlayerCount() == 0)
+                matches[counter++] = arena;
+        return Arrays.copyOf(matches, counter);
+    }
+
+    public boolean areAllArenasEmpty() {
+        for (Arena arena : arenas)
+            if (arena.getPlayerCount() > 0)
+                return false;
+        return true;
     }
 
     public Arena getArena(String name) {

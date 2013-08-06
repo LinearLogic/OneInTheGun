@@ -106,6 +106,10 @@ public class Arena implements Serializable {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
+        if (closed) {
+            broadcast(ChatColor.DARK_RED + "The arena has been closed by an administrator");
+            clearPlayers();
+        }
     }
 
     public boolean isIngame() {
