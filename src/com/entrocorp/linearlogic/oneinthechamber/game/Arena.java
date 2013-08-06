@@ -6,11 +6,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import com.entrocorp.linearlogic.oneinthechamber.OITC;
+import com.entrocorp.linearlogic.oneinthechamber.util.Pair;
+import com.entrocorp.linearlogic.oneinthechamber.util.TriMap;
 
 public class Arena implements Serializable {
 
@@ -25,6 +29,8 @@ public class Arena implements Serializable {
     private SerializableLocation lobby;
     private ArrayList<SerializableLocation> spawns;
     private ArrayList<SerializableLocation> signLocations;
+
+    private transient TriMap<Player, Integer, Integer> playerData;
 
     public Arena(String name) {
         this.name = name;
@@ -42,6 +48,7 @@ public class Arena implements Serializable {
             spawns = new ArrayList<SerializableLocation>();
         if (signLocations == null)
             signLocations = new ArrayList<SerializableLocation>();
+        playerData = new TriMap<Player, Integer, Integer>();
     }
 
     public void save() {
@@ -141,5 +148,72 @@ public class Arena implements Serializable {
 
     public void clearSignLocations() {
         signLocations.clear();
+    }
+
+    public Player[] getPlayers() {
+        return playerData.keySet().toArray(new Player[playerData.size()]);
+    }
+
+    public boolean containsPlayer(Player player) {
+        return playerData.keySet().contains(player);
+    }
+
+    public boolean addPlayer(Player player) {
+        if (playerData.containsKey(player))
+            return false;
+        playerData.put(player, 0, 0);
+        return true;
+    }
+
+    public boolean removePlayer(Player player) {
+        return playerData.remove(player) != null;
+    }
+
+    public void clearPlayers() {
+        playerData.clear();
+    }
+
+    public int getKills(Player player) {
+        Integer kills = playerData.getX(player);
+        return kills == null ? 0 : kills;
+    }
+
+    public boolean setKills(Player player, int kills) {
+        return playerData.setX(player, kills);
+    }
+
+    public int getDeaths(Player player) {
+        Integer deaths = playerData.getY(player);
+        return deaths == null ? 0 : deaths;
+    }
+
+    public boolean setDeaths(Player player, int deaths) {
+        return playerData.setY(player, deaths);
+    }
+
+    public double getKDR(Player player) {
+        if (!playerData.containsKey(player))
+            return -1.0;
+        return getDeaths(player) == 0 ? getKills(player) : getKills(player) / (double) getDeaths(player);
+    }
+
+    public boolean setPlayerData(Player player, int kills, int deaths) {
+        if (!playerData.containsKey(player))
+            return false;
+        playerData.put(player, kills, deaths);
+        return true;
+    }
+
+    public Player getPlayerWithMostKills() {
+        int mostKills = 0;
+        Player killer = null;
+        for (Entry<Player, Pair<Integer, Integer>> entry : playerData.entrySet()) {
+            int kills = entry.getValue().getX();
+            if (kills > mostKills) {
+                mostKills = kills;
+                killer = entry.getKey();
+            }
+        }
+        return killer;
     }
 }
