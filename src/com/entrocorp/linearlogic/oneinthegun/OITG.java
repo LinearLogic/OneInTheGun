@@ -12,9 +12,8 @@ public class OITG extends JavaPlugin {
         instance = this;
         logInfo("Loading the config...");
         saveDefaultConfig();
-        prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITC" : "O" +
-                ChatColor.DARK_GRAY + "ne" + ChatColor.GOLD + "I" + ChatColor.DARK_GRAY + "n" + ChatColor.GOLD + "T" +
-                ChatColor.DARK_GRAY + "he" + ChatColor.GOLD + "C" + ChatColor.DARK_GRAY + "hamber") + ChatColor.GRAY + "] ";
+        prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITG" : "One" +
+                ChatColor.DARK_GRAY + "InThe" + ChatColor.GOLD + "Gun") + ChatColor.GRAY + "] ";
         logInfo("Successfully enabled. Game on!");
     }
 
