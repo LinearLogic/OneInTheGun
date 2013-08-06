@@ -28,6 +28,7 @@ public class Arena implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
+    private boolean closed;
 
     private int playerLimit;
     private int timeLimit;
@@ -40,6 +41,7 @@ public class Arena implements Serializable {
     private transient Scoreboard board;
     private transient Objective objective;
 
+    private transient boolean ingame;
     private transient TriMap<Player, Integer, Integer> playerData;
 
     public Arena(String name) {
@@ -63,6 +65,7 @@ public class Arena implements Serializable {
         objective = board.registerNewObjective("kills", "totalKillCount");
         objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "Ç Kills È");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        ingame = false;
     }
 
     public void save() {
@@ -84,6 +87,22 @@ public class Arena implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public boolean isIngame() {
+        return ingame;
+    }
+
+    public void setIngame(boolean ingame) {
+        this.ingame = ingame;
     }
 
     public int getPlayerLimit() {
@@ -180,7 +199,7 @@ public class Arena implements Serializable {
         Sign sign = (Sign) block.getState();
         sign.setLine(0, name);
         sign.setLine(1, null);
-        sign.setLine(2, "stage"); // TODO implement stages
+        sign.setLine(2, getState());
         sign.setLine(3, playerData.size() + "/" + playerLimit);
         return sign.update();
     }
@@ -193,7 +212,7 @@ public class Arena implements Serializable {
             Sign sign = (Sign) block.getState();
             sign.setLine(0, name);
             sign.setLine(1, null);
-            sign.setLine(2, "stage"); // TODO implement stages
+            sign.setLine(2, getState());
             sign.setLine(3, playerData.size() + "/" + playerLimit);
             sign.update();
         }
@@ -308,5 +327,13 @@ public class Arena implements Serializable {
             board.resetScores(player);
             player.setScoreboard(OITC.instance.getServer().getScoreboardManager().getNewScoreboard());
         }
+    }
+
+    public String getState() {
+        if (closed)
+            return ChatColor.DARK_RED + "Closed";
+        if (ingame)
+            return ChatColor.RED + "In game";
+        return ChatColor.GREEN + "Waiting";
     }
 }
