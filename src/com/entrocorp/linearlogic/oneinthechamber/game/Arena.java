@@ -72,13 +72,18 @@ public class Arena implements Serializable {
         try {
             File arenaDir = new File(OITC.instance.getDataFolder() + File.separator + "arenas");
             arenaDir.mkdirs();
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(arenaDir, name + ".arena")));
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(arenaDir, name.toLowerCase() + ".arena")));
             oos.writeObject(this);
             oos.close();
         } catch (IOException e) {
             OITC.instance.logSevere("Failed to save arena \"" + name + "\"");
             e.printStackTrace();
         }
+    }
+
+    public void delete() {
+        new File(OITC.instance.getDataFolder() + File.separator + "arenas", name.toLowerCase() + ".arena").delete();
+        OITC.instance.logInfo("Deleted arena \"" + name + "\"");
     }
 
     public String toString() {
