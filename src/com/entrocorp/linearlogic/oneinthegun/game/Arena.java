@@ -266,15 +266,24 @@ public class Arena implements Serializable {
         if (playerData.containsKey(player))
             return false;
         playerData.put(player, 0, 0);
+        populateSigns();
         return true;
     }
 
     public boolean removePlayer(Player player) {
-        return playerData.remove(player) != null;
+        if (playerData.remove(player) == null)
+            return false;
+        board.resetScores(player);
+        player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
+        populateSigns();
+        return true;
     }
 
     public void clearPlayers() {
+        closeScoreboard();
         playerData.clear();
+        ingame = false;
+        populateSigns();
     }
 
     public int getKills(Player player) {
