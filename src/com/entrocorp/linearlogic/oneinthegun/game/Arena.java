@@ -75,6 +75,7 @@ public class Arena implements Serializable {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(arenaDir, name.toLowerCase() + ".arena")));
             oos.writeObject(this);
             oos.close();
+            OITG.instance.logInfo("Saved arena: " + name);
         } catch (IOException e) {
             OITG.instance.logSevere("Failed to save arena \"" + name + "\"");
             e.printStackTrace();
