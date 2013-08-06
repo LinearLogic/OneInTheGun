@@ -1,4 +1,4 @@
-package com.entrocorp.linearlogic.oneinthechamber.util;
+package com.entrocorp.linearlogic.oneinthegun.util;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

@@ -1,4 +1,4 @@
-package com.entrocorp.linearlogic.oneinthechamber.game;
+package com.entrocorp.linearlogic.oneinthegun.game;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,9 +19,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.entrocorp.linearlogic.oneinthechamber.OITC;
-import com.entrocorp.linearlogic.oneinthechamber.util.Pair;
-import com.entrocorp.linearlogic.oneinthechamber.util.TriMap;
+import com.entrocorp.linearlogic.oneinthegun.OITG;
+import com.entrocorp.linearlogic.oneinthegun.util.Pair;
+import com.entrocorp.linearlogic.oneinthegun.util.TriMap;
 
 public class Arena implements Serializable {
 
@@ -61,7 +61,7 @@ public class Arena implements Serializable {
         if (signLocations == null)
             signLocations = new ArrayList<SerializableLocation>();
         playerData = new TriMap<Player, Integer, Integer>();
-        board = OITC.instance.getServer().getScoreboardManager().getNewScoreboard();
+        board = OITG.instance.getServer().getScoreboardManager().getNewScoreboard();
         objective = board.registerNewObjective("kills", "totalKillCount");
         objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "Ç Kills È");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -70,20 +70,20 @@ public class Arena implements Serializable {
 
     public void save() {
         try {
-            File arenaDir = new File(OITC.instance.getDataFolder() + File.separator + "arenas");
+            File arenaDir = new File(OITG.instance.getDataFolder() + File.separator + "arenas");
             arenaDir.mkdirs();
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(arenaDir, name.toLowerCase() + ".arena")));
             oos.writeObject(this);
             oos.close();
         } catch (IOException e) {
-            OITC.instance.logSevere("Failed to save arena \"" + name + "\"");
+            OITG.instance.logSevere("Failed to save arena \"" + name + "\"");
             e.printStackTrace();
         }
     }
 
     public void delete() {
-        new File(OITC.instance.getDataFolder() + File.separator + "arenas", name.toLowerCase() + ".arena").delete();
-        OITC.instance.logInfo("Deleted arena \"" + name + "\"");
+        new File(OITG.instance.getDataFolder() + File.separator + "arenas", name.toLowerCase() + ".arena").delete();
+        OITG.instance.logInfo("Deleted arena \"" + name + "\"");
     }
 
     public String toString() {
@@ -330,7 +330,7 @@ public class Arena implements Serializable {
     public void closeScoreboard() {
         for (Player player : playerData.keySet()) {
             board.resetScores(player);
-            player.setScoreboard(OITC.instance.getServer().getScoreboardManager().getNewScoreboard());
+            player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         }
     }
 

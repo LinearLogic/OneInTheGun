@@ -1,4 +1,4 @@
-package com.entrocorp.linearlogic.oneinthechamber.util;
+package com.entrocorp.linearlogic.oneinthegun.util;
 
 public class Pair<X, Y> {
 

@@ -1,11 +1,11 @@
-package com.entrocorp.linearlogic.oneinthechamber.game;
+package com.entrocorp.linearlogic.oneinthegun.game;
 
 import java.io.Serializable;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.entrocorp.linearlogic.oneinthechamber.OITC;
+import com.entrocorp.linearlogic.oneinthegun.OITG;
 
 /**
  * A lightweight serializable Location wrapper
@@ -29,7 +29,7 @@ public class SerializableLocation implements Serializable {
     }
 
     public Location asBukkitLocation() {
-        World world = OITC.instance.getServer().getWorld(worldName);
+        World world = OITG.instance.getServer().getWorld(worldName);
         return world == null ? null : new Location(world, x, y, z);
     }
 

@@ -1,11 +1,11 @@
-package com.entrocorp.linearlogic.oneinthechamber;
+package com.entrocorp.linearlogic.oneinthegun;
 
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class OITC extends JavaPlugin {
+public class OITG extends JavaPlugin {
 
-    public static OITC instance;
+    public static OITG instance;
     public static String prefix;
 
     public void onEnable() {
