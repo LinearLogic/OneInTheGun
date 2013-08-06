@@ -1,11 +1,20 @@
 package com.entrocorp.linearlogic.oneinthechamber.game;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Location;
 
-public class Arena {
+import com.entrocorp.linearlogic.oneinthechamber.OITC;
+
+public class Arena implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
 
@@ -33,6 +42,19 @@ public class Arena {
             spawns = new ArrayList<SerializableLocation>();
         if (signLocations == null)
             signLocations = new ArrayList<SerializableLocation>();
+    }
+
+    public void save() {
+        try {
+            File arenaDir = new File(OITC.instance.getDataFolder() + File.separator + "arenas");
+            arenaDir.mkdirs();
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(arenaDir, name + ".arena")));
+            oos.writeObject(this);
+            oos.close();
+        } catch (IOException e) {
+            OITC.instance.logSevere("Failed to save arena \"" + name + "\"");
+            e.printStackTrace();
+        }
     }
 
     public String toString() {
