@@ -87,6 +87,11 @@ public class Arena implements Serializable {
         OITG.instance.logInfo("Deleted arena \"" + name + "\"");
     }
 
+    public void broadcast(String message) {
+        for (Player player : playerData.keySet())
+            player.sendMessage(OITG.prefix + "<" + ChatColor.YELLOW + name + ChatColor.GRAY + "> " + message);
+    }
+
     public String toString() {
         return name;
     }
