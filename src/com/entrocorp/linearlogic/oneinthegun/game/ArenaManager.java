@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 
 public class ArenaManager {
@@ -21,7 +24,7 @@ public class ArenaManager {
                 arena.init();
                 arenas.add(arena);
                 ois.close();
-                OITG.instance.logInfo("Loaded arena: " + arena.toString());
+                OITG.instance.logInfo("Loaded arena \"" + arena.toString() + "\"");
             } catch (Exception e) {
                 OITG.instance.logSevere("Failed to load an arena from the following file: " + arenaFile.getName());
                 e.printStackTrace();
@@ -33,5 +36,62 @@ public class ArenaManager {
     public void saveArenas() {
         for (Arena arena : arenas)
             arena.save();
+    }
+
+    public Arena[] getArenas() {
+        return arenas.toArray(new Arena[arenas.size()]);
+    }
+
+    public Arena getArena(String name) {
+        if (name == null)
+            return null;
+        for (Arena arena : arenas)
+            if (arena.toString().equalsIgnoreCase(name))
+                return arena;
+        return null;
+    }
+
+    public Arena getArena(Location signLoc) {
+        if (signLoc == null)
+            return null;
+        for (Arena arena : arenas)
+            if (arena.isSignLocation(signLoc))
+                return arena;
+        return null;
+    }
+
+    public Arena getArena(Player player) {
+        if (player == null)
+            return null;
+        for (Arena arena : arenas)
+            if (arena.containsPlayer(player))
+                return arena;
+        return null;
+    }
+
+    public boolean addArena(Arena arena) {
+        if (arena == null || getArena(arena.toString()) != null)
+            return false;
+        arenas.add(arena);
+        return true;
+    }
+
+    public boolean deleteArena(Arena arena) {
+        if (arena == null || !arenas.contains(arena))
+            return false;
+        arenas.remove(arena);
+        arena.delete();
+        return true;
+    }
+
+    public void deleteArenas() {
+        for (Arena arena : arenas)
+            arena.delete();
+        arenas.clear();
+    }
+
+    public void updateArenaSigns() {
+        for (Arena arena : arenas)
+            arena.populateSigns();
     }
 }
