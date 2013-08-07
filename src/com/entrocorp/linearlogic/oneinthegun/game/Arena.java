@@ -28,7 +28,10 @@ public class Arena implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
+
     private boolean closed;
+    private boolean allowBlockPlace;
+    private boolean allowBlockBreak;
 
     private int playerLimit;
     private int timeLimit;
@@ -110,6 +113,22 @@ public class Arena implements Serializable {
             broadcast(ChatColor.DARK_RED + "The arena has been closed by an administrator");
             clearPlayers();
         }
+    }
+
+    public boolean isBlockPlacingAllowed() {
+        return allowBlockPlace;
+    }
+
+    public void allowBlockPlacing(boolean allowed) {
+        allowBlockPlace = allowed;
+    }
+
+    public boolean isBlockBreakingAllowed() {
+        return allowBlockBreak;
+    }
+
+    public void allowBlockBreaking(boolean allowed) {
+        allowBlockBreak = allowed;
     }
 
     public boolean isIngame() {
