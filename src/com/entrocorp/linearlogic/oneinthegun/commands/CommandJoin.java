@@ -9,7 +9,7 @@ import com.entrocorp.linearlogic.oneinthegun.OITG;
 public class CommandJoin extends OITGArenaCommand {
 
     public CommandJoin(CommandSender sender, String[] args) {
-        super(sender, args, 1, "join <arena>", "oneinthegun.arena.join", true);
+        super(sender, args, 1, false, "join <arena>", "oneinthegun.arena.join", true);
     }
 
     public void run() {
