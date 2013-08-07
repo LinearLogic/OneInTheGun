@@ -1,5 +1,6 @@
 use-abbreviated-prefix: false
 join-to-lobby: true
+save-arena-on-edit: false
 global-lobby:
     x: 100
     y: 66

@@ -104,6 +104,9 @@ public class Arena implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+        delete();
+        save();
+        populateSigns();
     }
 
     public boolean isClosed() {
@@ -123,7 +126,11 @@ public class Arena implements Serializable {
     }
 
     public void allowBlockPlacing(boolean allowed) {
+        if (allowBlockPlace == allowed)
+            return;
         allowBlockPlace = allowed;
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public boolean isBlockBreakingAllowed() {
@@ -131,7 +138,11 @@ public class Arena implements Serializable {
     }
 
     public void allowBlockBreaking(boolean allowed) {
+        if (allowBlockBreak == allowed)
+            return;
         allowBlockBreak = allowed;
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public boolean isHealthRegenAllowed() {
@@ -139,7 +150,11 @@ public class Arena implements Serializable {
     }
 
     public void allowHealthRegen(boolean allowed) {
+        if (allowHealthRegen == allowed)
+            return;
         allowHealthRegen = allowed;
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public boolean isHungerAllowed() {
@@ -147,7 +162,11 @@ public class Arena implements Serializable {
     }
 
     public void allowHunger(boolean allowed) {
+        if (allowHunger == allowed)
+            return;
         allowHunger = allowed;
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public boolean isIngame() {
@@ -164,6 +183,8 @@ public class Arena implements Serializable {
 
     public void setPlayerLimit(int limit) {
         this.playerLimit = limit;
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public int getTimeLimit() {
@@ -172,6 +193,8 @@ public class Arena implements Serializable {
 
     public void setTimeLimit(int limit) {
         timeLimit = limit;
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public int getKillLimit() {
@@ -180,6 +203,8 @@ public class Arena implements Serializable {
 
     public void setKillLimit(int limit) {
         killLimit = limit;
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public Location getLobby() {
@@ -188,6 +213,8 @@ public class Arena implements Serializable {
 
     public void setLobby(Location loc) {
         lobby = new SerializableLocation(loc);
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public Location[] getSpawns() {
@@ -207,10 +234,14 @@ public class Arena implements Serializable {
 
     public void addSpawn(Location loc) {
         spawns.add(new SerializableLocation(loc));
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public void clearSpawns() {
         spawns.clear();
+        if (OITG.saveOnEdit)
+            save();
     }
 
     public Location[] getSignLocations() {
@@ -230,12 +261,16 @@ public class Arena implements Serializable {
             return false;
         signLocations.add(sloc);
         populateSign(loc);
+        if (OITG.saveOnEdit)
+            save();
         return true;
     }
 
-    public boolean removeSignLocation(Location loc) {
+    public void removeSignLocation(Location loc) {
         wipeSign(loc);
-        return signLocations.remove(new SerializableLocation(loc));
+        signLocations.remove(new SerializableLocation(loc));
+        if (OITG.saveOnEdit)
+            save();
     }
     
     public void clearSignLocations() {

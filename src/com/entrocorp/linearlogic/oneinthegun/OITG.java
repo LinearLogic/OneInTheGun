@@ -14,22 +14,20 @@ public class OITG extends JavaPlugin {
 
     public static OITG instance;
     public static String prefix;
+    public static boolean saveOnEdit;
 
     private ArenaManager am;
     private CommandHandler ch;
     private GameListener gameListener;
     private GeneralListener generalListener;
 
+    @Override
     public void onEnable() {
         instance = this;
         am = new ArenaManager();
         logInfo("Loading the config...");
         saveDefaultConfig();
-        prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITG" : "One" +
-                ChatColor.DARK_GRAY + "InThe" + ChatColor.GOLD + "Gun") + ChatColor.GRAY + "] ";
-        am.setGlobalLobby(new Location(getServer().getWorld(getConfig().getString("global-lobby.world")),
-                getConfig().getDouble("global-lobby.x"), getConfig().getDouble("global-lobby.y"), getConfig().getDouble("global-lobby.z"),
-                (float) getConfig().getDouble("global-lobby.yaw"), (float) getConfig().getDouble("global-lobby.pitch")), false);
+        reloadConfig();
         logInfo("Registering command handler...");
         ch = new CommandHandler();
         getCommand("oitc").setExecutor(ch);
@@ -42,6 +40,7 @@ public class OITG extends JavaPlugin {
         logInfo("Successfully enabled. Game on!");
     }
 
+    @Override
     public void onDisable() {
         ch = null;
         gameListener.setRegistered(false);
@@ -57,8 +56,10 @@ public class OITG extends JavaPlugin {
         instance = null;
     }
 
+    @Override
     public void reloadConfig() {
         super.reloadConfig();
+        saveOnEdit = getConfig().getBoolean("save-arena-on-edit");
         prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITG" : "One" +
                 ChatColor.DARK_GRAY + "InThe" + ChatColor.GOLD + "Gun") + ChatColor.GRAY + "] ";
         am.setGlobalLobby(new Location(getServer().getWorld(getConfig().getString("global-lobby.world")),
