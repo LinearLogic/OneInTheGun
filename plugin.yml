@@ -19,6 +19,9 @@ permissions:
     oneinthegun.arena.list:
         description: Permission to list arenas
         default: true
+    oneinthegun.arena.setlobby:
+        description: Permission to place the lobby of an arena
+        default: op
     oneinthegun.arena.signs:
         description: Permission to create and destroy arena signs
         default: op
