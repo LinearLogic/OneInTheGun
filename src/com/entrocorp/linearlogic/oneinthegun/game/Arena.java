@@ -325,6 +325,7 @@ public class Arena implements Serializable {
         populateSigns();
         if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
             OITG.instance.getGameListener().setRegistered(false);
+        broadcast(player.getName() + " has fled the arena!");
         return true;
     }
 

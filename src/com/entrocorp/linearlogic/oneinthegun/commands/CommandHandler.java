@@ -23,7 +23,9 @@ public class CommandHandler implements CommandExecutor {
             newArgs[i] = args[i + 1];
         
         OITGCommand cmd = null;
-        if (label.equals("reload"))
+        if (label.equals("leave"))
+            cmd = new CommandLeave(sender, args);
+        else if (label.equals("reload"))
             cmd = new CommandReload(sender, args);
         else if (label.equals("version"))
             cmd = new CommandVersion(sender, args);
