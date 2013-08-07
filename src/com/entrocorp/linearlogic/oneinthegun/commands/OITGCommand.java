@@ -30,7 +30,7 @@ public abstract class OITGCommand {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Only players can run that command.");
             return false;
         }
-        if (sender instanceof Player && !sender.hasPermission(permission)) {
+        if (sender instanceof Player && permission != null && !sender.hasPermission(permission)) {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Access denied!");
             return false;
         }
