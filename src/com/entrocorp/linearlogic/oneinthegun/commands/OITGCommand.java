@@ -10,11 +10,11 @@ public abstract class OITGCommand {
 
     protected final CommandSender sender;
     protected String[] args;
-    protected final int minimumArgs;
-    protected final String usage;
+    private final int minimumArgs;
+    private final String usage;
 
-    protected final String permission;
-    protected final boolean mustBePlayer;
+    private final String permission;
+    private final boolean mustBePlayer;
 
     public OITGCommand(CommandSender sender, String[] args, int minimumArgs, String usage, String permission, boolean mustBePlayer) {
         this.sender = sender;
@@ -41,7 +41,7 @@ public abstract class OITGCommand {
 
     public boolean checkArgsLength() {
         if (args.length < minimumArgs) {
-            sender.sendMessage(OITG.prefix + ChatColor.RED + "Too few arguments.");
+            msgUsage();
             return false;
         }
         return true;
