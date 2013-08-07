@@ -26,5 +26,14 @@ public class GameListener implements Listener {
             HandlerList.unregisterAll(this);
         listening = registered;
     }
-}
 
+    @EventHandler(ignoreCancelled = true)
+    public void onBuild(BlockPlaceEvent event) {
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
+        if (arena != null && !arena.isBlockPlacingAllowed()) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Block breaking is disabled in this arena.");
+            return;
+        }
+    }
+}
