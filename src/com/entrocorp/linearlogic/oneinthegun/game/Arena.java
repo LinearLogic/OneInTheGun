@@ -145,7 +145,7 @@ public class Arena implements Serializable {
     }
 
     public Location getLobby() {
-        return lobby.asBukkitLocation();
+        return lobby == null ? null : lobby.asBukkitLocation();
     }
 
     public void setLobby(Location loc) {
