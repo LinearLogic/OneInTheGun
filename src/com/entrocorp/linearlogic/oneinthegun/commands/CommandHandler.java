@@ -25,6 +25,8 @@ public class CommandHandler implements CommandExecutor {
         OITGCommand cmd = null;
         if (label.equals("arenas") || label.equals("arenalist"))
             cmd = new CommandArenas(sender, args);
+        else if (label.equals("close"))
+            cmd = new CommandClose(sender, args);
         else if (label.equals("create"))
             cmd = new CommandCreate(sender, args);
         else if (label.equals("delete"))

@@ -22,6 +22,9 @@ permissions:
     oneinthegun.arena.signs:
         description: Permission to create and destroy arena signs
         default: op
+    oneinthegun.arena.toggleclosed:
+        description: Permission to open and close arenas
+        default: op
     oneinthegun.reload:
         description: Permission to reload the config
         default: op
