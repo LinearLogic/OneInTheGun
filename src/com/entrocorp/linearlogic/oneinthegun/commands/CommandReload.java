@@ -8,7 +8,7 @@ import com.entrocorp.linearlogic.oneinthegun.OITG;
 public class CommandReload extends OITGCommand {
 
     public CommandReload(CommandSender sender, String[] args) {
-        super(sender, args, "reload", "oneinthegun.reload", false);
+        super(sender, args, 0, "reload", "oneinthegun.reload", false);
     }
 
     public void run() {

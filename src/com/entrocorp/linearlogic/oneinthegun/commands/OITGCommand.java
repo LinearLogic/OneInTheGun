@@ -10,14 +10,16 @@ public abstract class OITGCommand {
 
     protected final CommandSender sender;
     protected String[] args;
+    protected final int minimumArgs;
     protected final String usage;
 
     protected final String permission;
     protected final boolean mustBePlayer;
 
-    public OITGCommand(CommandSender sender, String[] args, String usage, String permission, boolean mustBePlayer) {
+    public OITGCommand(CommandSender sender, String[] args, int minimumArgs, String usage, String permission, boolean mustBePlayer) {
         this.sender = sender;
         this.args = args;
+        this.minimumArgs = minimumArgs;
         this.usage = usage;
         this.permission = permission;
         this.mustBePlayer = mustBePlayer;
@@ -32,6 +34,14 @@ public abstract class OITGCommand {
         }
         if (sender instanceof Player && permission != null && !sender.hasPermission(permission)) {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Access denied!");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkArgsLength() {
+        if (args.length < minimumArgs) {
+            sender.sendMessage(OITG.prefix + ChatColor.RED + "Too few arguments.");
             return false;
         }
         return true;

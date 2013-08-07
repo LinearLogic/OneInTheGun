@@ -9,7 +9,7 @@ import com.entrocorp.linearlogic.oneinthegun.game.Arena;
 public class CommandLeave extends OITGCommand {
 
     public CommandLeave(CommandSender sender, String[] args) {
-        super(sender, args, "leave", null, true);
+        super(sender, args, 0, "leave", null, true);
     }
 
     public void run() {

@@ -8,7 +8,7 @@ import com.entrocorp.linearlogic.oneinthegun.OITG;
 public class CommandVersion extends OITGCommand {
 
     public CommandVersion(CommandSender sender, String[] args) {
-        super(sender, args, "version", null, false);
+        super(sender, args, 0, "version", null, false);
     }
 
     public void run() {

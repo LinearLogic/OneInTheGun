@@ -34,7 +34,9 @@ public class CommandHandler implements CommandExecutor {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Command not recognized.");
             return true;
         }
-        if (cmd instanceof OITGArenaCommand && !((OITGArenaCommand) cmd).validate())
+        if (!cmd.checkArgsLength())
+            return true;
+        if (cmd instanceof OITGArenaCommand && !((OITGArenaCommand) cmd).validateArena())
             return true;
         if (cmd.authorizeSender())
             cmd.run();
