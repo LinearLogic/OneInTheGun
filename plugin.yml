@@ -28,6 +28,9 @@ permissions:
     oneinthegun.arena.spawns.add:
         description: Permission to add arena spawn points
         default: op
+    oneinthegun.arena.spawns.clear:
+        description: Permission to clear arena spawn points
+        default: op
     oneinthegun.arena.toggleclosed:
         description: Permission to open and close arenas
         default: op

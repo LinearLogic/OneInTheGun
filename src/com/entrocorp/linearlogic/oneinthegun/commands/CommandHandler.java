@@ -27,6 +27,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandAddSpawn(sender, args);
         else if (label.equals("arenas") || label.equals("arenalist"))
             cmd = new CommandArenas(sender, args);
+        else if (label.equals("clearspawns"))
+            cmd = new CommandClearSpawns(sender, args);
         else if (label.equals("close"))
             cmd = new CommandClose(sender, args);
         else if (label.equals("create"))
