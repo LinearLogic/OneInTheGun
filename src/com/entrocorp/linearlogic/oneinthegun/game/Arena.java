@@ -33,6 +33,7 @@ public class Arena implements Serializable {
     private boolean allowBlockPlace;
     private boolean allowBlockBreak;
     private boolean allowHealthRegen;
+    private boolean allowHunger;
 
     private int playerLimit;
     private int timeLimit;
@@ -138,6 +139,14 @@ public class Arena implements Serializable {
 
     public void allowHealthRegen(boolean allowed) {
         allowHealthRegen = allowed;
+    }
+
+    public boolean isHungerAllowed() {
+        return allowHunger;
+    }
+
+    public void allowHunger(boolean allowed) {
+        allowHunger = allowed;
     }
 
     public boolean isIngame() {

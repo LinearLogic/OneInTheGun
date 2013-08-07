@@ -7,6 +7,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
@@ -46,6 +47,16 @@ public class GameListener implements Listener {
         Player player = (Player) event.getEntity();
         Arena arena = OITG.instance.getArenaManager().getArena(player);
         if (arena != null && !arena.isHealthRegenAllowed())
+            event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onHunger(FoodLevelChangeEvent event) {
+        if (!(event.getEntity() instanceof Player))
+            return;
+        Player player = (Player) event.getEntity();
+        Arena arena = OITG.instance.getArenaManager().getArena(player);
+        if (arena != null && !arena.isHungerAllowed())
             event.setCancelled(true);
     }
 }
