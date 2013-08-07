@@ -313,6 +313,7 @@ public class Arena implements Serializable {
             return false;
         playerData.put(player, 0, 0);
         populateSigns();
+        OITG.instance.getGameListener().setRegistered(true);
         return true;
     }
 
@@ -322,6 +323,8 @@ public class Arena implements Serializable {
         board.resetScores(player);
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         populateSigns();
+        if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
+            OITG.instance.getGameListener().setRegistered(false);
         return true;
     }
 
@@ -330,6 +333,8 @@ public class Arena implements Serializable {
         playerData.clear();
         ingame = false;
         populateSigns();
+        if (OITG.instance.getArenaManager().areAllArenasEmpty())
+            OITG.instance.getGameListener().setRegistered(false);
     }
 
     public int getKills(Player player) {
