@@ -1,11 +1,13 @@
 package com.entrocorp.linearlogic.oneinthegun.events;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
@@ -79,5 +81,19 @@ public class GeneralListener {
         event.setLine(3, arena.getPlayerCount() + "/" + arena.getPlayerLimit());
         arena.addSignLocation(event.getBlock().getLocation());
         event.getPlayer().sendMessage(OITG.prefix + ChatColor.GRAY + "Created a sign for arena: " + arena.toString());
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        if (!OITG.instance.getConfig().getBoolean("join-to-lobby"))
+            return;
+        final Player joined = event.getPlayer();
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                Location globby = OITG.instance.getArenaManager().getGlobalLobby();
+                if (globby != null)
+                    joined.teleport(globby);
+            }
+        }, 5L);
     }
 }

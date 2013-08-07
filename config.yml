@@ -1,4 +1,5 @@
 use-abbreviated-prefix: false
+join-to-lobby: true
 global-lobby:
     x: 100
     y: 66
