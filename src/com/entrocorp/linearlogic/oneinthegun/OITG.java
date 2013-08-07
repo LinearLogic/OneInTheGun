@@ -2,8 +2,11 @@ package com.entrocorp.linearlogic.oneinthegun;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.entrocorp.linearlogic.oneinthegun.events.GameListener;
+import com.entrocorp.linearlogic.oneinthegun.events.GeneralListener;
 import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
 
 public class OITG extends JavaPlugin {
@@ -12,6 +15,8 @@ public class OITG extends JavaPlugin {
     public static String prefix;
 
     private ArenaManager am;
+    private GameListener gameListener;
+    private GeneralListener generalListener;
 
     public void onEnable() {
         instance = this;
@@ -23,12 +28,20 @@ public class OITG extends JavaPlugin {
         am.setGlobalLobby(new Location(getServer().getWorld(getConfig().getString("global-lobby.world")),
                 getConfig().getDouble("global-lobby.x"), getConfig().getDouble("global-lobby.y"), getConfig().getDouble("global-lobby.z"),
                 (float) getConfig().getDouble("global-lobby.yaw"), (float) getConfig().getDouble("global-lobby.pitch")), false);
+        logInfo("Registering listeners...");
+        gameListener = new GameListener();
+        generalListener = new GeneralListener();
+        getServer().getPluginManager().registerEvents(generalListener, instance);
         logInfo("Loading arenas...");
         am.loadArenas();
         logInfo("Successfully enabled. Game on!");
     }
 
     public void onDisable() {
+        gameListener.setRegistered(false);
+        gameListener = null;
+        HandlerList.unregisterAll(generalListener);
+        generalListener = null;
         logInfo("Saving the config...");
         saveConfig();
         logInfo("Saving arenas...");
@@ -40,6 +53,14 @@ public class OITG extends JavaPlugin {
 
     public ArenaManager getArenaManager() {
         return am;
+    }
+
+    public GameListener getGameListener() {
+        return gameListener;
+    }
+
+    public GeneralListener getGeneralListener() {
+        return generalListener;
     }
 
     public void logInfo(String msg) {
