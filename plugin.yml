@@ -2,10 +2,17 @@ name: OneInTheGun
 main: com.entrocorp.linearlogic.oneinthegun.OITG
 version: 0.0.1
 author: LinearLogic
+commands:
+    oitg:
+        description: Root command
+        usage: /oitg [args]
 permissions:
     oneinthegun.arena.join:
         description: Permission to join arenas
         default: true
     oneinthegun.arena.signs:
         description: Permission to create and destroy arena signs
+        default: op
+    oneinthegun.reload:
+        description: Permission to reload the config
         default: op

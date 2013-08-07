@@ -57,6 +57,15 @@ public class OITG extends JavaPlugin {
         instance = null;
     }
 
+    public void reloadConfig() {
+        super.reloadConfig();
+        prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITG" : "One" +
+                ChatColor.DARK_GRAY + "InThe" + ChatColor.GOLD + "Gun") + ChatColor.GRAY + "] ";
+        am.setGlobalLobby(new Location(getServer().getWorld(getConfig().getString("global-lobby.world")),
+                getConfig().getDouble("global-lobby.x"), getConfig().getDouble("global-lobby.y"), getConfig().getDouble("global-lobby.z"),
+                (float) getConfig().getDouble("global-lobby.yaw"), (float) getConfig().getDouble("global-lobby.pitch")), false);
+    }
+
     public ArenaManager getArenaManager() {
         return am;
     }

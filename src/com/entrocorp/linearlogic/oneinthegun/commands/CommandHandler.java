@@ -17,19 +17,21 @@ public class CommandHandler implements CommandExecutor {
             return true;
         }
 
-        label = args[0];
+        label = args[0].toLowerCase();
         String[] newArgs = new String[args.length - 1];
         for (int i = 0; i < newArgs.length; i++)
             newArgs[i] = args[i + 1];
         
         OITGCommand cmd = null;
-        // TODO initialize cmd based on command name
+        if (label.equals("reload"))
+            cmd = new CommandReload(sender, args);
 
-        if (cmd == null)
+        if (cmd == null) {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Command not recognized.");
-        else
-            if (cmd.authorizeSender())
-                cmd.run();
+            return true;
+        }
+        if (cmd.authorizeSender())
+            cmd.run();
         return true;
     }
 }
