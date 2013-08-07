@@ -21,7 +21,7 @@ public class GeneralListener implements Listener {
         Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
         if (arena != null && !arena.isBlockBreakingAllowed()) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Block placing is disabled in this arena.");
+            event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Block breaking is disabled in this arena.");
             return;
         }
         arena = OITG.instance.getArenaManager().getArena(event.getBlock().getLocation());
