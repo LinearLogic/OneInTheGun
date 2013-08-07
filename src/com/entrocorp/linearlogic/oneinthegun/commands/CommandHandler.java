@@ -29,6 +29,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandLeave(sender, args);
         else if (label.equals("reload"))
             cmd = new CommandReload(sender, args);
+        else if (label.equals("setgloballobby"))
+            cmd = new CommandSetGlobalLobby(sender, args);
         else if (label.equals("version"))
             cmd = new CommandVersion(sender, args);
 

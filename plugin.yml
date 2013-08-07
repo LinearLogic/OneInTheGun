@@ -19,3 +19,6 @@ permissions:
     oneinthegun.reload:
         description: Permission to reload the config
         default: op
+    oneinthegun.setgloballobby:
+        description: Permission to place the global lobby
+        default: op
