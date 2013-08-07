@@ -1,13 +1,57 @@
 package com.entrocorp.linearlogic.oneinthegun.events;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
 
 public class GeneralListener {
+
+    @EventHandler(ignoreCancelled = true)
+    public void onClick(PlayerInteractEvent event) {
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+            return;
+        Player player = event.getPlayer();
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getClickedBlock().getLocation());
+        if (arena == null)
+            return;
+        if (!player.hasPermission("oneinthegun.join")) {
+            player.sendMessage(OITG.prefix + ChatColor.RED + "You don't have permission to play!");
+            return;
+        }
+        if (arena.isIngame()) {
+            player.sendMessage(OITG.prefix + ChatColor.RED + "A game is already in progress in that arena, choose another.");
+            return;
+        }
+        if (arena.isClosed()) {
+            player.sendMessage(OITG.prefix + ChatColor.RED + "That arena is closed, choose another.");
+            return;
+        }
+        if (arena.getPlayerCount() >= arena.getPlayerLimit()) {
+            player.sendMessage(OITG.prefix + ChatColor.RED + "That arena is full, choose another.");
+            return;
+        }
+        if (arena.getLobby() == null) {
+            player.sendMessage(OITG.prefix + ChatColor.RED + "That arena has not been set up: no lobby has been set.");
+            return;
+        }
+        if (arena.getSpawns().length == 0) {
+            player.sendMessage(OITG.prefix + ChatColor.RED + "That arena has not been set up: no spawn points have been set.");
+            return;
+        }
+        if (OITG.instance.getArenaManager().getArena(player) != null) {
+            player.sendMessage(OITG.prefix + ChatColor.RED + "You are already in an arena!");
+            return;
+        }
+        arena.addPlayer(player);
+        player.teleport(arena.getLobby());
+        arena.broadcast(player.getName() + " has joined the arena!");
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
