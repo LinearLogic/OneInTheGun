@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
@@ -37,6 +38,31 @@ public class GameListener implements Listener {
             event.setCancelled(true);
             event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Block placing is disabled in this arena.");
             return;
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Player defender = (event.getEntity() instanceof Player ? (Player) event.getEntity() : null),
+                attacker = (event.getDamager() instanceof Player ? (Player) event.getDamager() : null);
+        if (defender == null && attacker == null)
+            return;
+
+        Arena defenderArena = OITG.instance.getArenaManager().getArena(defender);
+        if (defenderArena != null) {
+            if (attacker == null) {
+                if (!defenderArena.isMobInteractAllowed()) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
+        Arena attackerArena = OITG.instance.getArenaManager().getArena(attacker);
+        if (attackerArena != null) {
+            if (defender == null && !attackerArena.isMobInteractAllowed()) {
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 

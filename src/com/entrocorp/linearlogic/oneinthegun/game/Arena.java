@@ -34,6 +34,7 @@ public class Arena implements Serializable {
     private boolean allowBlockBreak;
     private boolean allowHealthRegen;
     private boolean allowHunger;
+    private boolean allowMobInteract;
 
     private int playerLimit;
     private int timeLimit;
@@ -165,6 +166,18 @@ public class Arena implements Serializable {
         if (allowHunger == allowed)
             return;
         allowHunger = allowed;
+        if (OITG.saveOnEdit)
+            save();
+    }
+
+    public boolean isMobInteractAllowed() {
+        return allowMobInteract;
+    }
+
+    public void allowMobInteract(boolean allowed) {
+        if (allowMobInteract == allowed)
+            return;
+        allowMobInteract = allowed;
         if (OITG.saveOnEdit)
             save();
     }
@@ -332,6 +345,7 @@ public class Arena implements Serializable {
             sign.setLine(3, null);
         }
     }
+
     public Player[] getPlayers() {
         return playerData.keySet().toArray(new Player[playerData.size()]);
     }
