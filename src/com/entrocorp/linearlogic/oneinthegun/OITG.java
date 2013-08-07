@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.entrocorp.linearlogic.oneinthegun.commands.CommandHandler;
 import com.entrocorp.linearlogic.oneinthegun.events.GameListener;
 import com.entrocorp.linearlogic.oneinthegun.events.GeneralListener;
 import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
@@ -15,6 +16,7 @@ public class OITG extends JavaPlugin {
     public static String prefix;
 
     private ArenaManager am;
+    private CommandHandler ch;
     private GameListener gameListener;
     private GeneralListener generalListener;
 
@@ -28,6 +30,9 @@ public class OITG extends JavaPlugin {
         am.setGlobalLobby(new Location(getServer().getWorld(getConfig().getString("global-lobby.world")),
                 getConfig().getDouble("global-lobby.x"), getConfig().getDouble("global-lobby.y"), getConfig().getDouble("global-lobby.z"),
                 (float) getConfig().getDouble("global-lobby.yaw"), (float) getConfig().getDouble("global-lobby.pitch")), false);
+        logInfo("Registering command handler...");
+        ch = new CommandHandler();
+        getCommand("oitc").setExecutor(ch);
         logInfo("Registering listeners...");
         gameListener = new GameListener();
         generalListener = new GeneralListener();
@@ -38,6 +43,7 @@ public class OITG extends JavaPlugin {
     }
 
     public void onDisable() {
+        ch = null;
         gameListener.setRegistered(false);
         gameListener = null;
         HandlerList.unregisterAll(generalListener);
