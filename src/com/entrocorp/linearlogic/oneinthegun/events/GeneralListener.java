@@ -17,7 +17,13 @@ public class GeneralListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
-        Arena arena = OITG.instance.getArenaManager().getArena(event.getBlock().getLocation());
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
+        if (arena != null && !arena.isBlockBreakingAllowed()) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Block placing is disabled in this arena.");
+            return;
+        }
+        arena = OITG.instance.getArenaManager().getArena(event.getBlock().getLocation());
         if (arena == null)
             return;
         if (!event.getPlayer().hasPermission("dodgeball.arena.signs")) {
