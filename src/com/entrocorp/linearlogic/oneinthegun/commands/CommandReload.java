@@ -11,9 +11,8 @@ public class CommandReload extends OITGCommand {
         super(sender, args, "reload", "oneinthegun.reload", false);
     }
 
-    public boolean run() {
+    public void run() {
         OITG.instance.reloadConfig();
         sender.sendMessage(OITG.prefix + ChatColor.GREEN + "Reloaded the config.");
-        return true;
     }
 }

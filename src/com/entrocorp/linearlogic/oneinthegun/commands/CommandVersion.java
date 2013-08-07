@@ -11,9 +11,8 @@ public class CommandVersion extends OITGCommand {
         super(sender, args, "version", null, false);
     }
 
-    public boolean run() {
+    public void run() {
         sender.sendMessage(OITG.prefix + "Running version " + ChatColor.LIGHT_PURPLE + OITG.instance.getDescription().getVersion() +
                 ChatColor.GRAY + " by LinearLogic.");
-        return true;
     }
 }

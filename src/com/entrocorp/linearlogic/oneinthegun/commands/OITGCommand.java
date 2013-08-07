@@ -23,7 +23,7 @@ public abstract class OITGCommand {
         this.mustBePlayer = mustBePlayer;
     }
 
-    public abstract boolean run();
+    public abstract void run();
 
     public boolean authorizeSender() {
         if (mustBePlayer && !(sender instanceof Player)) {
