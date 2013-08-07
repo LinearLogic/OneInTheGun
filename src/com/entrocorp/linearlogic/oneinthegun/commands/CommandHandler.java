@@ -21,7 +21,7 @@ public class CommandHandler implements CommandExecutor {
         String[] newArgs = new String[args.length - 1];
         for (int i = 0; i < newArgs.length; i++)
             newArgs[i] = args[i + 1];
-        
+
         OITGCommand cmd = null;
         if (label.equals("leave"))
             cmd = new CommandLeave(sender, args);
@@ -34,6 +34,8 @@ public class CommandHandler implements CommandExecutor {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Command not recognized.");
             return true;
         }
+        if (cmd instanceof OITGArenaCommand && !((OITGArenaCommand) cmd).validate())
+            return true;
         if (cmd.authorizeSender())
             cmd.run();
         return true;
