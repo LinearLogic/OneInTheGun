@@ -14,6 +14,7 @@ import com.entrocorp.linearlogic.oneinthegun.OITG;
 public class ArenaManager {
 
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
+    private Location globalLobby;
 
     public void loadArenas() {
         File arenaDir = new File(OITG.instance.getDataFolder() + File.separator + "arenas");
@@ -137,5 +138,22 @@ public class ArenaManager {
     public void updateArenaSigns() {
         for (Arena arena : arenas)
             arena.populateSigns();
+    }
+
+    public Location getGlobalLobby() {
+        return globalLobby;
+    }
+
+    public void setGlobalLobby(Location loc, boolean updateConfig) {
+        globalLobby = loc;
+        if (updateConfig) {
+            OITG.instance.getConfig().set("global-lobby.world", loc.getWorld().getName());
+            OITG.instance.getConfig().set("global-lobby.x", loc.getX());
+            OITG.instance.getConfig().set("global-lobby.y", loc.getY());
+            OITG.instance.getConfig().set("global-lobby.z", loc.getZ());
+            OITG.instance.getConfig().set("global-lobby.yaw", loc.getYaw());
+            OITG.instance.getConfig().set("global-lobby.pitch", loc.getPitch());
+            OITG.instance.saveConfig();
+        }
     }
 }

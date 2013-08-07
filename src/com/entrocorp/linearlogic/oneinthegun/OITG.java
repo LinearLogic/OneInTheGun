@@ -1,6 +1,7 @@
 package com.entrocorp.linearlogic.oneinthegun;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
@@ -19,6 +20,9 @@ public class OITG extends JavaPlugin {
         saveDefaultConfig();
         prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITG" : "One" +
                 ChatColor.DARK_GRAY + "InThe" + ChatColor.GOLD + "Gun") + ChatColor.GRAY + "] ";
+        am.setGlobalLobby(new Location(getServer().getWorld(getConfig().getString("global-lobby.world")),
+                getConfig().getDouble("global-lobby.x"), getConfig().getDouble("global-lobby.y"), getConfig().getDouble("global-lobby.z"),
+                (float) getConfig().getDouble("global-lobby.yaw"), (float) getConfig().getDouble("global-lobby.pitch")), false);
         logInfo("Loading arenas...");
         am.loadArenas();
         logInfo("Successfully enabled. Game on!");

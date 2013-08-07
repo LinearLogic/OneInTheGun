@@ -1,1 +1,8 @@
 use-abbreviated-prefix: false
+global-lobby:
+    x: 100
+    y: 66
+    z: 100
+    yaw: 0
+    pitch: 0
+    world: world
