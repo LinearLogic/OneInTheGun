@@ -28,7 +28,8 @@ public class CommandHandler implements CommandExecutor {
         if (cmd == null)
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Command not recognized.");
         else
-            cmd.run();
+            if (cmd.authorizeSender())
+                cmd.run();
         return true;
     }
 }
