@@ -27,6 +27,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandArenas(sender, args);
         else if (label.equals("create"))
             cmd = new CommandCreate(sender, args);
+        else if (label.equals("join"))
+            cmd = new CommandJoin(sender, args);
         else if (label.equals("leave"))
             cmd = new CommandLeave(sender, args);
         else if (label.equals("reload"))

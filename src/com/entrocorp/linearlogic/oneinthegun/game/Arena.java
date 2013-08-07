@@ -314,6 +314,7 @@ public class Arena implements Serializable {
         playerData.put(player, 0, 0);
         populateSigns();
         OITG.instance.getGameListener().setRegistered(true);
+        broadcast(player.getName() + " has joined the arena.");
         return true;
     }
 
