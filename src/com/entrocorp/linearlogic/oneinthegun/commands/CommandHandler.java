@@ -35,6 +35,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandJoin(sender, args);
         else if (label.equals("leave"))
             cmd = new CommandLeave(sender, args);
+        else if (label.equals("open"))
+            cmd = new CommandOpen(sender, args);
         else if (label.equals("reload"))
             cmd = new CommandReload(sender, args);
         else if (label.equals("setgloballobby"))
