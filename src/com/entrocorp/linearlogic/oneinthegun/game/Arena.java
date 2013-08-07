@@ -88,6 +88,7 @@ public class Arena implements Serializable {
     }
 
     public void delete() {
+        wipeSigns();
         new File(OITG.instance.getDataFolder() + File.separator + "arenas", name.toLowerCase() + ".arena").delete();
         OITG.instance.logInfo("Deleted arena \"" + name + "\"");
     }

@@ -27,6 +27,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandArenas(sender, args);
         else if (label.equals("create"))
             cmd = new CommandCreate(sender, args);
+        else if (label.equals("delete"))
+            cmd = new CommandDelete(sender, args);
         else if (label.equals("join"))
             cmd = new CommandJoin(sender, args);
         else if (label.equals("leave"))
@@ -48,6 +50,7 @@ public class CommandHandler implements CommandExecutor {
             return true;
         if (cmd.authorizeSender())
             cmd.run();
+        cmd = null;
         return true;
     }
 }

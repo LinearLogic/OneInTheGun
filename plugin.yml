@@ -10,6 +10,9 @@ permissions:
     oneinthegun.arena.create:
         description: Permission to create arenas
         default: op
+    oneinthegun.arena.delete:
+        description: Permission to delete arenas
+        default: op
     oneinthegun.arena.join:
         description: Permission to join arenas
         default: true
