@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -13,6 +14,20 @@ import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
 
 public class GeneralListener {
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBreak(BlockBreakEvent event) {
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getBlock().getLocation());
+        if (arena == null)
+            return;
+        if (!event.getPlayer().hasPermission("dodgeball.arena.signs")) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "You don't have permission to break arena signs!");
+            return;
+        }
+        arena.removeSignLocation(event.getBlock().getLocation());
+        event.getPlayer().sendMessage(OITG.prefix + "Removed a sign for arena: " + arena.toString());
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onClick(PlayerInteractEvent event) {
@@ -80,7 +95,7 @@ public class GeneralListener {
         event.setLine(2, arena.getState());
         event.setLine(3, arena.getPlayerCount() + "/" + arena.getPlayerLimit());
         arena.addSignLocation(event.getBlock().getLocation());
-        event.getPlayer().sendMessage(OITG.prefix + ChatColor.GRAY + "Created a sign for arena: " + arena.toString());
+        event.getPlayer().sendMessage(OITG.prefix + "Created a sign for arena: " + arena.toString());
     }
 
     @EventHandler
