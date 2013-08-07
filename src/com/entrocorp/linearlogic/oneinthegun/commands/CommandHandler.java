@@ -25,6 +25,8 @@ public class CommandHandler implements CommandExecutor {
         OITGCommand cmd = null;
         if (label.equals("reload"))
             cmd = new CommandReload(sender, args);
+        else if (label.equals("version"))
+            cmd = new CommandVersion(sender, args);
 
         if (cmd == null) {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Command not recognized.");
