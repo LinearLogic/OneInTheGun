@@ -1,10 +1,12 @@
 package com.entrocorp.linearlogic.oneinthegun.events;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
@@ -35,5 +37,15 @@ public class GameListener implements Listener {
             event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Block breaking is disabled in this arena.");
             return;
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (!(event.getEntity() instanceof Player))
+            return;
+        Player player = (Player) event.getEntity();
+        Arena arena = OITG.instance.getArenaManager().getArena(player);
+        if (arena != null && !arena.isHealthRegenAllowed())
+            event.setCancelled(true);
     }
 }
