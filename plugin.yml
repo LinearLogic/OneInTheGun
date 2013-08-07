@@ -13,6 +13,9 @@ permissions:
     oneinthegun.arena.join:
         description: Permission to join arenas
         default: true
+    oneinthegun.arena.list:
+        description: Permission to list arenas
+        default: true
     oneinthegun.arena.signs:
         description: Permission to create and destroy arena signs
         default: op
