@@ -74,7 +74,7 @@ public class Arena implements Serializable {
         ingame = false;
     }
 
-    public void save() {
+    public boolean save() {
         try {
             File arenaDir = new File(OITG.instance.getDataFolder() + File.separator + "arenas");
             arenaDir.mkdirs();
@@ -82,9 +82,11 @@ public class Arena implements Serializable {
             oos.writeObject(this);
             oos.close();
             OITG.instance.logInfo("Saved arena \"" + name + "\"");
+            return true;
         } catch (IOException e) {
             OITG.instance.logSevere("Failed to save arena \"" + name + "\"");
             e.printStackTrace();
+            return false;
         }
     }
 
