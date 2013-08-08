@@ -39,6 +39,7 @@ public class CommandJoin extends OITGArenaCommand {
             return;
         }
         arena.addPlayer((Player) sender);
+        player.teleport(arena.getLobby());
     }
 
 }
