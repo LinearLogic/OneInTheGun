@@ -74,7 +74,6 @@ public class GeneralListener implements Listener {
         }
         arena.addPlayer(player);
         player.teleport(arena.getLobby());
-        arena.broadcast(player.getName() + " has joined the arena!");
     }
 
     @EventHandler(ignoreCancelled = true)
