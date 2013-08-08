@@ -20,7 +20,7 @@ public class CommandCreate extends OITGCommand {
         if (!OITG.instance.getArenaManager().addArena(new Arena(args[0])))
             sender.sendMessage(OITG.prefix + ChatColor.RED + "An arena with that name already exists.");
         else
-            sender.sendMessage(OITG.prefix + ChatColor.GREEN + "Created arena " + args[1] + ".");
+            sender.sendMessage(OITG.prefix + ChatColor.GREEN + "Created arena " + args[0] + ".");
     }
 
 }
