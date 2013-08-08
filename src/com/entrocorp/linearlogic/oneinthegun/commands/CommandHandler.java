@@ -24,31 +24,31 @@ public class CommandHandler implements CommandExecutor {
 
         OITGCommand cmd = null;
         if (label.equals("addspawn"))
-            cmd = new CommandAddSpawn(sender, args);
+            cmd = new CommandAddSpawn(sender, newArgs);
         else if (label.equals("arenas") || label.equals("arenalist"))
-            cmd = new CommandArenas(sender, args);
+            cmd = new CommandArenas(sender, newArgs);
         else if (label.equals("clearspawns"))
-            cmd = new CommandClearSpawns(sender, args);
+            cmd = new CommandClearSpawns(sender, newArgs);
         else if (label.equals("close"))
-            cmd = new CommandClose(sender, args);
+            cmd = new CommandClose(sender, newArgs);
         else if (label.equals("create"))
-            cmd = new CommandCreate(sender, args);
+            cmd = new CommandCreate(sender, newArgs);
         else if (label.equals("delete"))
-            cmd = new CommandDelete(sender, args);
+            cmd = new CommandDelete(sender, newArgs);
         else if (label.equals("join"))
-            cmd = new CommandJoin(sender, args);
+            cmd = new CommandJoin(sender, newArgs);
         else if (label.equals("leave"))
-            cmd = new CommandLeave(sender, args);
+            cmd = new CommandLeave(sender, newArgs);
         else if (label.equals("open"))
-            cmd = new CommandOpen(sender, args);
+            cmd = new CommandOpen(sender, newArgs);
         else if (label.equals("reload"))
-            cmd = new CommandReload(sender, args);
+            cmd = new CommandReload(sender, newArgs);
         else if (label.equals("setgloballobby"))
-            cmd = new CommandSetGlobalLobby(sender, args);
+            cmd = new CommandSetGlobalLobby(sender, newArgs);
         else if (label.equals("setlobby"))
-            cmd = new CommandSetLobby(sender, args);
+            cmd = new CommandSetLobby(sender, newArgs);
         else if (label.equals("version"))
-            cmd = new CommandVersion(sender, args);
+            cmd = new CommandVersion(sender, newArgs);
 
         if (cmd == null) {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "Command not recognized.");

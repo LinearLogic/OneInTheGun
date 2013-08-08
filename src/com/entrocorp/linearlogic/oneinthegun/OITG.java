@@ -30,7 +30,7 @@ public class OITG extends JavaPlugin {
         reloadConfig();
         logInfo("Registering command handler...");
         ch = new CommandHandler();
-        getCommand("oitc").setExecutor(ch);
+        getCommand("oitg").setExecutor(ch);
         logInfo("Registering listeners...");
         gameListener = new GameListener();
         generalListener = new GeneralListener();
