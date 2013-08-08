@@ -204,6 +204,10 @@ public class Arena implements Serializable {
         return timeLimit;
     }
 
+    public String getTimeLimitFormatted() {
+        return String.format("%02d:%02d", timeLimit / 60, timeLimit % 60);
+    }
+
     public void setTimeLimit(int limit) {
         timeLimit = limit;
         if (OITG.saveOnEdit)

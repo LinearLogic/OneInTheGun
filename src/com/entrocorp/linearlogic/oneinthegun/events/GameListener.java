@@ -57,6 +57,7 @@ public class GameListener implements Listener {
                 }
             }
         }
+
         Arena attackerArena = OITG.instance.getArenaManager().getArena(attacker);
         if (attackerArena != null) {
             if (defender == null && !attackerArena.isMobInteractAllowed()) {

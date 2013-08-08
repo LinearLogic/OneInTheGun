@@ -35,6 +35,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandCreate(sender, newArgs);
         else if (label.equals("delete"))
             cmd = new CommandDelete(sender, newArgs);
+        else if (label.equals("info"))
+            cmd = new CommandInfo(sender, newArgs);
         else if (label.equals("join"))
             cmd = new CommandJoin(sender, newArgs);
         else if (label.equals("leave"))

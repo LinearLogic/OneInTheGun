@@ -13,6 +13,9 @@ permissions:
     oneinthegun.arena.delete:
         description: Permission to delete arenas
         default: op
+    oneinthegun.arena.info:
+        description: Permission to view arena round info and settings
+        default: true
     oneinthegun.arena.join:
         description: Permission to join arenas
         default: true
