@@ -29,7 +29,7 @@ public class CommandLeaderboard extends OITGArenaCommand {
                 pageNum = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) { }
             if (pageNum < 1 || pageNum > pageMax) {
-                sender.sendMessage(OITG.prefix + "The page number must be between 1 and " + pageMax + ", inclusive.");
+                sender.sendMessage(OITG.prefix + "The page number must be a positive value no greater than " + pageMax + ".");
                 return;
             }
         } else {
