@@ -50,6 +50,8 @@ public class Arena implements Serializable {
     private transient Objective objective;
 
     private transient boolean ingame;
+    private transient int timer;
+
     private transient Set<Pair<Player, HLComparablePair<Integer, Integer>>> leaderboard;
     private transient TriMap<Player, Integer, Integer> playerData;
 
@@ -75,7 +77,7 @@ public class Arena implements Serializable {
         objective = board.registerNewObjective("kills", "totalKillCount");
         objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\\u0171 Kills \\u0187");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        ingame = false;
+        setIngame(false);
     }
 
     public boolean save() {
@@ -103,6 +105,22 @@ public class Arena implements Serializable {
     public void broadcast(String message) {
         for (Player player : playerData.keySet())
             player.sendMessage(OITG.prefix + "<" + ChatColor.YELLOW + name + ChatColor.GRAY + "> " + message);
+    }
+
+    public void start() {
+        Location[] spawns = getSpawns();
+        int index = -1;
+        for (Player player : playerData.keySet())
+            player.teleport(spawns[++index % spawns.length]);
+        setIngame(true);
+        broadcast("" + ChatColor.RED + ChatColor.BOLD + "Game on!");
+    }
+
+    private void endgame() {
+        OITG.instance.getServer().broadcastMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD +
+                leaderboard.iterator().next().getX().getName() + ChatColor.GRAY + " emerges victorious from arena " +
+                ChatColor.YELLOW + name + ChatColor.GRAY + "!");
+        clearPlayers();
     }
 
     public String toString() {
@@ -195,9 +213,48 @@ public class Arena implements Serializable {
     }
 
     public void setIngame(boolean ingame) {
+        if (this.ingame == ingame)
+            return;
         this.ingame = ingame;
-        if (ingame)
+        if (ingame) {
             updateLeaderboard();
+            timer = timeLimit;
+        }
+        timer = -1;
+        populateSigns();
+    }
+
+    public int getTimerRemaining() {
+        return timer;
+    }
+
+    public String getTimeRemainingFormatted() {
+        return timer == -1 ? "N/A" : String.format("%02d:%02d", timer / 60, timer % 60);
+    }
+
+    public void setTimeRemaining(int seconds) {
+        if (!ingame)
+            return;
+        timer = seconds < 1 ? 1 : seconds; // Add a one second delay if < 1 to ensure that endgame handling occurs
+    }
+
+    public void decrementTimer() {
+        if (!ingame || timer == -1)
+            return;
+        switch(--timer) {
+            case 0:
+                endgame();
+                break;
+            case 10:
+            case 30:
+                broadcast(ChatColor.RED + "The round ends in " + ChatColor.LIGHT_PURPLE + timer + " seconds" + ChatColor.GRAY + "!");
+                break;
+            default:
+                if (timer % 60 == 0)
+                    broadcast(ChatColor.GRAY + "The round ends in " + ChatColor.LIGHT_PURPLE + (timer == 60 ? "1 minute" :
+                            timer / 60 + " minutes") + ChatColor.GRAY + "!");
+                break;
+        }
     }
 
     public int getPlayerLimit() {
@@ -392,12 +449,16 @@ public class Arena implements Serializable {
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         populateSigns();
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
-        if (ingame)
-            updateLeaderboard();
-        if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
-            OITG.instance.getGameListener().setRegistered(false);
         if (broadcast)
             broadcast(player.getName() + " has fled the arena!");
+        if (ingame)
+            updateLeaderboard();
+        if (playerData.size() == 1) {
+            endgame();
+            return true;
+        }
+        if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
+            OITG.instance.getGameListener().setRegistered(false);
         return true;
     }
 
@@ -406,7 +467,7 @@ public class Arena implements Serializable {
         for (Player player : playerData.keySet())
             player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         playerData.clear();
-        ingame = false;
+        setIngame(false);
         populateSigns();
         updateLeaderboard();
         if (OITG.instance.getArenaManager().areAllArenasEmpty())

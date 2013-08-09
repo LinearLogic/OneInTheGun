@@ -49,6 +49,11 @@ public class ArenaManager {
         arenas.clear();
     }
 
+    public void decrementTimers() {
+        for (Arena arena : arenas)
+            arena.decrementTimer();
+    }
+
     public Arena[] getArenas() {
         return arenas.toArray(new Arena[arenas.size()]);
     }
