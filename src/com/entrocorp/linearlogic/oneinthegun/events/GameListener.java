@@ -57,6 +57,10 @@ public class GameListener implements Listener {
         Arena defenderArena = OITG.instance.getArenaManager().getArena(defender),
                 attackerArena = OITG.instance.getArenaManager().getArena(attacker);
         if (defenderArena != null) {
+            if (!defenderArena.isIngame()) {
+                event.setCancelled(true);
+                return;
+            }
             if (attacker == null) {
                 if (event.getCause().equals(DamageCause.PROJECTILE)) {
                     LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
@@ -121,6 +125,10 @@ public class GameListener implements Listener {
         if (attackerArena == null)
             return;
         if (defender != null) {
+            event.setCancelled(true);
+            return;
+        }
+        if (!attackerArena.isIngame()) {
             event.setCancelled(true);
             return;
         }
