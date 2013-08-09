@@ -388,6 +388,7 @@ public class Arena implements Serializable {
         board.resetScores(player);
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         populateSigns();
+        player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         if (ingame)
             updateLeaderboard();
         if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
@@ -399,6 +400,8 @@ public class Arena implements Serializable {
 
     public void clearPlayers() {
         closeScoreboard();
+        for (Player player : playerData.keySet())
+            player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         playerData.clear();
         ingame = false;
         populateSigns();
