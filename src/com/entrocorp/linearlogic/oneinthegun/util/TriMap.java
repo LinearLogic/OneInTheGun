@@ -1,7 +1,9 @@
 package com.entrocorp.linearlogic.oneinthegun.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
@@ -18,12 +20,10 @@ public class TriMap<K, X extends Comparable<X>, Y extends Comparable<Y>> {
         return map.get(key).getX();
     }
 
-    @SuppressWarnings("unchecked")
-    public X[] getXValues() {
-        X[] output = (X[]) new Object[map.size()];
-        int index = 0;
+    public List<X> getXValues() {
+        List<X> output = new ArrayList<X>();
         for (HLComparablePair<X, Y> p : map.values())
-            output[index++] = p.getX();
+            output.add(p.getX());
         return output;
     }
 
@@ -38,12 +38,10 @@ public class TriMap<K, X extends Comparable<X>, Y extends Comparable<Y>> {
         return map.get(key).getY();
     }
 
-    @SuppressWarnings("unchecked")
-    public Y[] getYValues() {
-        Y[] output = (Y[]) new Object[map.size()];
-        int index = 0;
+    public List<Y> getYValues() {
+        List<Y> output = new ArrayList<Y>();
         for (HLComparablePair<X, Y> p : map.values())
-            output[index++] = p.getY();
+            output.add(p.getY());
         return output;
     }
 
@@ -58,9 +56,8 @@ public class TriMap<K, X extends Comparable<X>, Y extends Comparable<Y>> {
         return map.get(key);
     }
 
-    @SuppressWarnings("unchecked")
-    public HLComparablePair<X, Y>[] getPairs() {
-        return map.values().toArray((HLComparablePair<X, Y>[]) new Object[map.size()]);
+    public List<HLComparablePair<X, Y>> getPairs() {
+        return new ArrayList<HLComparablePair<X, Y>>(map.values());
     }
 
     public Set<Entry<K, HLComparablePair<X, Y>>> entrySet() {
