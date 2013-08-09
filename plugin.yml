@@ -19,6 +19,9 @@ permissions:
     oneinthegun.arena.join:
         description: Permission to join arenas
         default: true
+    oneinthegun.arena.leaderboard:
+        description: Permission to view arena leaderboards
+        default: true
     oneinthegun.arena.list:
         description: Permission to list arenas
         default: true

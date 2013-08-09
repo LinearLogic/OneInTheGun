@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,6 +22,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.util.HLComparablePair;
+import com.entrocorp.linearlogic.oneinthegun.util.Pair;
 import com.entrocorp.linearlogic.oneinthegun.util.TriMap;
 
 public class Arena implements Serializable {
@@ -354,6 +356,10 @@ public class Arena implements Serializable {
 
     public Player[] getPlayers() {
         return playerData.keySet().toArray(new Player[playerData.size()]);
+    }
+
+    public Set<Pair<Player, HLComparablePair<Integer, Integer>>> getSortedPlayerScores() {
+        return playerData.sortedEntrySet();
     }
 
     public int getPlayerCount() {
