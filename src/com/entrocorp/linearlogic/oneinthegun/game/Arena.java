@@ -437,7 +437,7 @@ public class Arena implements Serializable {
     }
 
     public boolean containsPlayer(Player player) {
-        return playerData.keySet().contains(player);
+        return playerData.containsKey(player);
     }
 
     public boolean addPlayer(Player player) {
@@ -520,6 +520,14 @@ public class Arena implements Serializable {
 
     public boolean incrementDeaths(Player player) {
         return setDeaths(player, getDeaths(player) + 1);
+    }
+
+    public void killPlayer(Player player) {
+        if (!incrementDeaths(player))
+            return;
+        player.setHealth(player.getMaxHealth());
+        player.teleport(getRandomSpawn());
+        armPlayer(player);
     }
 
     public double getKDR(Player player) {

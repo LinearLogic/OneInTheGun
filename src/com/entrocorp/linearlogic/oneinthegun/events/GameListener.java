@@ -1,12 +1,18 @@
 package com.entrocorp.linearlogic.oneinthegun.events;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Flying;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
@@ -48,19 +54,38 @@ public class GameListener implements Listener {
         if (defender == null && attacker == null)
             return;
 
-        Arena defenderArena = OITG.instance.getArenaManager().getArena(defender);
+        Arena defenderArena = OITG.instance.getArenaManager().getArena(defender),
+                attackerArena = OITG.instance.getArenaManager().getArena(attacker);
         if (defenderArena != null) {
             if (attacker == null) {
-                if (!defenderArena.isMobInteractAllowed()) {
+                if (event.getCause().equals(DamageCause.PROJECTILE)) {
+                    LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
+                    if (shooter instanceof Player) {
+                        attacker = (Player) shooter;
+                        event.setCancelled(true);
+                        if (!defenderArena.equals(attackerArena)) {
+                            return;
+                        }
+                        if (!(event.getDamager() instanceof Arrow))
+                            return;
+                        defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was sniped by " +
+                                ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
+                        defenderArena.killPlayer(defender);
+                        defenderArena.incrementKills(attacker);
+                        return;
+                    }
+                    if (shooter instanceof Creature || shooter instanceof Flying && !defenderArena.isMobInteractAllowed())
+                        event.setCancelled(true);
+                    return;
+                }
+                if ((event.getCause().equals(DamageCause.ENTITY_ATTACK) || event.getCause().equals(DamageCause.WITHER) ||
+                        event.getCause().equals(DamageCause.ENTITY_EXPLOSION)) && !defenderArena.isMobInteractAllowed()) {
                     event.setCancelled(true);
                     return;
                 }
+                return;
             }
-        }
-
-        Arena attackerArena = OITG.instance.getArenaManager().getArena(attacker);
-        if (attackerArena != null) {
-            if (defender == null && !attackerArena.isMobInteractAllowed()) {
+            if (!defenderArena.equals(attackerArena)) {
                 event.setCancelled(true);
                 return;
             }
