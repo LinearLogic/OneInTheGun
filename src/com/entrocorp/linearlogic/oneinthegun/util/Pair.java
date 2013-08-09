@@ -2,8 +2,8 @@ package com.entrocorp.linearlogic.oneinthegun.util;
 
 public class Pair<X, Y> {
 
-    private X x;
-    private Y y;
+    protected X x;
+    protected Y y;
 
     public Pair(X x, Y y) {
         this.x = x;

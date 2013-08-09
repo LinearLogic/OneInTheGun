@@ -20,7 +20,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
-import com.entrocorp.linearlogic.oneinthegun.util.Pair;
+import com.entrocorp.linearlogic.oneinthegun.util.HLComparablePair;
 import com.entrocorp.linearlogic.oneinthegun.util.TriMap;
 
 public class Arena implements Serializable {
@@ -429,7 +429,7 @@ public class Arena implements Serializable {
     public Player getPlayerWithMostKills() {
         int mostKills = 0;
         Player killer = null;
-        for (Entry<Player, Pair<Integer, Integer>> entry : playerData.entrySet()) {
+        for (Entry<Player, HLComparablePair<Integer, Integer>> entry : playerData.entrySet()) {
             int kills = entry.getValue().getX();
             if (kills > mostKills) {
                 mostKills = kills;
