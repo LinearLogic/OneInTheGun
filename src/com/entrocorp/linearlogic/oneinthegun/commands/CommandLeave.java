@@ -19,7 +19,7 @@ public class CommandLeave extends OITGCommand {
             player.sendMessage(OITG.prefix + "You aren't in an arena.");
             return;
         }
-        arena.removePlayer(player);
+        arena.removePlayer(player, true);
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         player.sendMessage(OITG.prefix + "You have left arena " + arena.toString() + ".");
     }

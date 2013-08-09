@@ -382,7 +382,7 @@ public class Arena implements Serializable {
         return true;
     }
 
-    public boolean removePlayer(Player player) {
+    public boolean removePlayer(Player player, boolean broadcast) {
         if (playerData.remove(player) == null)
             return false;
         board.resetScores(player);
@@ -392,7 +392,8 @@ public class Arena implements Serializable {
             updateLeaderboard();
         if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
             OITG.instance.getGameListener().setRegistered(false);
-        broadcast(player.getName() + " has fled the arena!");
+        if (broadcast)
+            broadcast(player.getName() + " has fled the arena!");
         return true;
     }
 

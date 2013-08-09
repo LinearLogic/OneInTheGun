@@ -124,6 +124,6 @@ public class GeneralListener implements Listener {
         Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
         if (arena == null)
             return;
-        arena.removePlayer(event.getPlayer());
+        arena.removePlayer(event.getPlayer(), true);
     }
 }
