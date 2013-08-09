@@ -1,12 +1,14 @@
 package com.entrocorp.linearlogic.oneinthegun.util;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
-public class TriMap<K, X, Y> {
+public class TriMap<K, X extends Comparable<X>, Y extends Comparable<Y>> {
 
-    private HashMap<K, Pair<X, Y>> map = new HashMap<K, Pair<X, Y>>();
+    protected HashMap<K, HLComparablePair<X, Y>> map = new HashMap<K, HLComparablePair<X, Y>>();
 
     public Set<K> keySet() {
         return map.keySet();
@@ -20,7 +22,7 @@ public class TriMap<K, X, Y> {
     public X[] getXValues() {
         X[] output = (X[]) new Object[map.size()];
         int index = 0;
-        for (Pair<X, Y> p : map.values())
+        for (HLComparablePair<X, Y> p : map.values())
             output[index++] = p.getX();
         return output;
     }
@@ -40,7 +42,7 @@ public class TriMap<K, X, Y> {
     public Y[] getYValues() {
         Y[] output = (Y[]) new Object[map.size()];
         int index = 0;
-        for (Pair<X, Y> p : map.values())
+        for (HLComparablePair<X, Y> p : map.values())
             output[index++] = p.getY();
         return output;
     }
@@ -52,16 +54,16 @@ public class TriMap<K, X, Y> {
         return true;
     }
 
-    public Pair<X, Y> getPair(K key) {
+    public HLComparablePair<X, Y> getPair(K key) {
         return map.get(key);
     }
 
     @SuppressWarnings("unchecked")
-    public Pair<X, Y>[] getPairs() {
-        return map.values().toArray((Pair<X, Y>[]) new Object[map.size()]);
+    public HLComparablePair<X, Y>[] getPairs() {
+        return map.values().toArray((HLComparablePair<X, Y>[]) new Object[map.size()]);
     }
 
-    public Set<Entry<K, Pair<X, Y>>> entrySet() {
+    public Set<Entry<K, HLComparablePair<X, Y>>> entrySet() {
         return map.entrySet();
     }
 
@@ -69,11 +71,11 @@ public class TriMap<K, X, Y> {
         return map.containsKey(key);
     }
 
-    public Pair<X, Y> put(K key, X x, Y y) {
-        return map.put(key, new Pair<X, Y>(x, y));
+    public HLComparablePair<X, Y> put(K key, X x, Y y) {
+        return map.put(key, new HLComparablePair<X, Y>(x, y));
     }
 
-    public Pair<X, Y> remove(K key) {
+    public HLComparablePair<X, Y> remove(K key) {
         return map.remove(key);
     }
 
