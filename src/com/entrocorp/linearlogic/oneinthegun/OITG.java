@@ -44,13 +44,13 @@ public class OITG extends JavaPlugin {
     public void onDisable() {
         ch = null;
         gameListener.setRegistered(false);
-        gameListener = null;
         HandlerList.unregisterAll(generalListener);
         generalListener = null;
         logInfo("Saving the config...");
         saveConfig();
         logInfo("Saving arenas...");
-        am.saveArenas();
+        am.shutdown();
+        gameListener = null;
         am = null;
         logInfo("Successfully disabled. Game over!");
         instance = null;

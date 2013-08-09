@@ -125,7 +125,9 @@ public class Arena implements Serializable {
         if (closed) {
             broadcast(ChatColor.DARK_RED + "The arena has been closed by an administrator");
             clearPlayers();
+            return;
         }
+        populateSigns();
     }
 
     public boolean isBlockPlacingAllowed() {

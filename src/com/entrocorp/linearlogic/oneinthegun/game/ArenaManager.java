@@ -40,6 +40,15 @@ public class ArenaManager {
             arena.save();
     }
 
+    public void shutdown() {
+        for (Arena arena : arenas) {
+            arena.clearPlayers();
+            arena.populateSigns();
+            arena.save();
+        }
+        arenas.clear();
+    }
+
     public Arena[] getArenas() {
         return arenas.toArray(new Arena[arenas.size()]);
     }
