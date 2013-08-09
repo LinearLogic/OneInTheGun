@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
@@ -172,5 +174,18 @@ public class GameListener implements Listener {
         if (arena == null || arena.isItemPickupAllowed())
             return;
         event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onRespawn(PlayerRespawnEvent event) {
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
+        if (arena == null)
+            return;
+        if (!arena.isIngame()) {
+            event.setRespawnLocation(arena.getLobby());
+        }
+        event.setRespawnLocation(arena.getRandomSpawn());
+        arena.incrementDeaths(event.getPlayer());
+        arena.armPlayer(event.getPlayer());
     }
 }
