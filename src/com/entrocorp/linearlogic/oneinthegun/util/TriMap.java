@@ -67,6 +67,16 @@ public class TriMap<K, X extends Comparable<X>, Y extends Comparable<Y>> {
         return map.entrySet();
     }
 
+    public Set<Pair<K, HLComparablePair<X, Y>>> sortedEntrySet() {
+        TreeMap<HLComparablePair<X, Y>, K> sorted = new TreeMap<HLComparablePair<X, Y>, K>();
+        for (Entry<K, HLComparablePair<X, Y>> entry : map.entrySet())
+            sorted.put(entry.getValue(), entry.getKey());
+        Set<Pair<K, HLComparablePair<X, Y>>> output = new LinkedHashSet<Pair<K, HLComparablePair<X, Y>>>();
+        for (Entry<HLComparablePair<X, Y>, K> entry : sorted.entrySet())
+            output.add(new Pair<K, HLComparablePair<X, Y>>(entry.getValue(), entry.getKey()));
+        return output;
+    }
+
     public boolean containsKey(K key) {
         return map.containsKey(key);
     }
