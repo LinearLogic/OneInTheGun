@@ -137,6 +137,30 @@ public class CommandSettings extends OITGArenaCommand {
             return;
         }
 
+        if (setting.equals("item-drop")) {
+            if (!checkPermission("oneinthegun.arena.settings.itemdrop"))
+                return;
+            if (arena.isItemDroppingAllowed() == flag) {
+                sender.sendMessage(OITG.prefix + "Item dropping is already " + (flag ? "enabled." : "disabled."));
+                return;
+            }
+            arena.allowItemDropping(flag);
+            sender.sendMessage(OITG.prefix + "Item dropping in arena " + arena.toString() + " is now " + (flag ? "enabled." : "disabled."));
+            return;
+        }
+
+        if (setting.equals("item-pickup")) {
+            if (!checkPermission("oneinthegun.arena.settings.itempickup"))
+                return;
+            if (arena.isItemPickupAllowed() == flag) {
+                sender.sendMessage(OITG.prefix + "Item pickup is already " + (flag ? "enabled." : "disabled."));
+                return;
+            }
+            arena.allowItemPickup(flag);
+            sender.sendMessage(OITG.prefix + "Item pickup in arena " + arena.toString() + " is now " + (flag ? "enabled." : "disabled."));
+            return;
+        }
+
         if (setting.equals("mob-combat")) {
             if (!checkPermission("oneinthegun.arena.settings.mobcombat"))
                 return;
@@ -149,8 +173,8 @@ public class CommandSettings extends OITGArenaCommand {
             return;
         }
 
-        sender.sendMessage(OITG.prefix + ChatColor.RED + "Invalid setting name. Supported settings: " + ChatColor.GRAY +
-                "player-limit, time-limit, kill-limit, block-place, block-break, health-regen, hunger, mob-combat.");
+        sender.sendMessage(OITG.prefix + ChatColor.RED + "Invalid setting name. Supported settings: " + ChatColor.GRAY + "player-limit, " +
+                "time-limit, kill-limit, block-place, block-break, health-regen, hunger, item-drop, item-pickup, mob-combat.");
     }
 
     private boolean checkPermission(String permission) {

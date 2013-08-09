@@ -15,6 +15,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
@@ -154,5 +156,21 @@ public class GameListener implements Listener {
         Arena arena = OITG.instance.getArenaManager().getArena(player);
         if (arena != null && !arena.isHungerAllowed())
             event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onItemDrop(PlayerDropItemEvent event) {
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
+        if (arena == null || arena.isItemDroppingAllowed())
+            return;
+        event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onItemPickup(PlayerPickupItemEvent event) {
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
+        if (arena == null || arena.isItemPickupAllowed())
+            return;
+        event.setCancelled(true);
     }
 }

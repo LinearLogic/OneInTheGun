@@ -58,6 +58,12 @@ permissions:
     oneinthegun.arena.settings.hunger:
         description: Permission to toggle whether hunger is enabled in an arena
         default: op
+    oneinthegun.arena.settings.itemdrop:
+        description: Permission to toggle whether item dropping is enabled in an arena
+        default: op
+    oneinthegun.arena.settings.itempickup:
+        description: Permission to toggle whether item pickup is enabled in an arena
+        default: op
     oneinthegun.arena.settings.mobcombat:
         description: Permission to toggle whether combat with mobs is allowed in an arena
         default: op

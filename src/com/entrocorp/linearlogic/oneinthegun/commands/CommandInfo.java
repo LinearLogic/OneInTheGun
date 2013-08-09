@@ -18,6 +18,7 @@ public class CommandInfo extends OITGArenaCommand {
                 "none" : ChatColor.LIGHT_PURPLE + Integer.toString(arena.getKillLimit())) + ChatColor.GRAY + "\n\nBlock placing: " +
                 parseEnabled(arena.isBlockPlacingAllowed()) + "\nBlock breaking: " + parseEnabled(arena.isBlockBreakingAllowed()) +
                 "\nHealth regeneration: " + parseEnabled(arena.isHealthRegenAllowed()) + "\nHunger: " + parseEnabled(arena.isHungerAllowed()) +
+                "\nItem dropping: " + parseEnabled(arena.isItemDroppingAllowed()) + "\nItem pickup: " + parseEnabled(arena.isItemPickupAllowed()) +
                 "\nMob combat: " + parseEnabled(arena.isMobCombatAllowed()));
     }
 
