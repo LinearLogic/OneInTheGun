@@ -6,16 +6,17 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -110,8 +111,11 @@ public class Arena implements Serializable {
     public void start() {
         Location[] spawns = getSpawns();
         int index = -1;
-        for (Player player : playerData.keySet())
+        for (Player player : playerData.keySet()) {
+            player.setGameMode(GameMode.SURVIVAL);
+            armPlayer(player);
             player.teleport(spawns[++index % spawns.length]);
+        }
         setIngame(true);
         broadcast("" + ChatColor.RED + ChatColor.BOLD + "Game on!");
     }
@@ -424,6 +428,10 @@ public class Arena implements Serializable {
         return playerData.keySet().toArray(new Player[playerData.size()]);
     }
 
+    public Player getPlayerWithMostKills() {
+        return leaderboard.iterator().next().getX();
+    }
+
     public int getPlayerCount() {
         return playerData.size();
     }
@@ -527,17 +535,12 @@ public class Arena implements Serializable {
         return true;
     }
 
-    public Player getPlayerWithMostKills() {
-        int mostKills = 0;
-        Player killer = null;
-        for (Entry<Player, HLComparablePair<Integer, Integer>> entry : playerData.entrySet()) {
-            int kills = entry.getValue().getX();
-            if (kills > mostKills) {
-                mostKills = kills;
-                killer = entry.getKey();
-            }
-        }
-        return killer;
+    public void armPlayer(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[4]);
+        player.getInventory().setItem(0, new ItemStack(Material.BOW));
+        player.getInventory().setItem(1, new ItemStack(Material.WOOD_SWORD));
+        player.getInventory().setItem(8, new ItemStack(Material.ARROW));
     }
 
     public void loadScoreboard(boolean reset) {
