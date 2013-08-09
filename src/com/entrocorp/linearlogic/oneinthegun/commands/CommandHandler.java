@@ -39,6 +39,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandInfo(sender, newArgs);
         else if (label.equals("join"))
             cmd = new CommandJoin(sender, newArgs);
+        else if (label.equals("kick"))
+            cmd = new CommandKick(sender, newArgs);
         else if (label.equals("leaderboard"))
             cmd = new CommandLeaderboard(sender, newArgs);
         else if (label.equals("leave"))

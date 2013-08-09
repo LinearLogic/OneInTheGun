@@ -19,6 +19,9 @@ permissions:
     oneinthegun.arena.join:
         description: Permission to join arenas
         default: true
+    oneinthegun.arena.kick:
+        description: Permission to kick players from arenas
+        default: op
     oneinthegun.arena.leaderboard:
         description: Permission to view arena leaderboards
         default: true
