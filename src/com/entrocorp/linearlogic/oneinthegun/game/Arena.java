@@ -37,6 +37,8 @@ public class Arena implements Serializable {
     private boolean allowBlockBreak;
     private boolean allowHealthRegen;
     private boolean allowHunger;
+    private boolean allowItemDrop;
+    private boolean allowItemPickup;
     private boolean allowMobCombat;
 
     private int playerLimit;
@@ -55,6 +57,7 @@ public class Arena implements Serializable {
 
     private transient Set<Pair<Player, HLComparablePair<Integer, Integer>>> leaderboard;
     private transient TriMap<Player, Integer, Integer> playerData;
+
 
     public Arena(String name) {
         this.name = name;
@@ -196,6 +199,30 @@ public class Arena implements Serializable {
         if (allowHunger == allowed)
             return;
         allowHunger = allowed;
+        if (OITG.saveOnEdit)
+            save();
+    }
+
+    public boolean isItemDroppingAllowed() {
+        return allowItemDrop;
+    }
+
+    public void allowItemDropping(boolean allowed) {
+        if (allowItemDrop == allowed)
+            return;
+        allowItemDrop = allowed;
+        if (OITG.saveOnEdit)
+            save();
+    }
+
+    public boolean isItemPickupAllowed() {
+        return allowItemPickup;
+    }
+
+    public void allowItemPickup(boolean allowed) {
+        if (allowItemPickup == allowed)
+            return;
+        allowItemPickup = allowed;
         if (OITG.saveOnEdit)
             save();
     }
