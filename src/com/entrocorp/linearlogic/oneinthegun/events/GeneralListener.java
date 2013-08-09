@@ -44,7 +44,7 @@ public class GeneralListener implements Listener {
         Arena arena = OITG.instance.getArenaManager().getArena(event.getClickedBlock().getLocation());
         if (arena == null)
             return;
-        if (!player.hasPermission("oneinthegun.join")) {
+        if (!player.hasPermission("oneinthegun.arena.join")) {
             player.sendMessage(OITG.prefix + ChatColor.RED + "You don't have permission to play!");
             return;
         }
