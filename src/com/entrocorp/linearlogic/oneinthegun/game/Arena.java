@@ -247,13 +247,14 @@ public class Arena implements Serializable {
         if (this.ingame == ingame)
             return;
         this.ingame = ingame;
+        populateSigns();
         if (ingame) {
             updateLeaderboard();
             timer = timeLimit;
             OITG.instance.getArenaManager().startTimers();
+            return;
         }
         timer = -1;
-        populateSigns();
         if (!OITG.instance.getArenaManager().areAnyArenasIngame())
             OITG.instance.getArenaManager().stopTimers();
     }
@@ -530,6 +531,8 @@ public class Arena implements Serializable {
     public boolean setKills(Player player, int kills) {
         if (!playerData.setX(player, kills))
             return false;
+        if (killLimit != -1 && kills >= killLimit)
+            endgame();
         updateLeaderboard();
         return true;
     }

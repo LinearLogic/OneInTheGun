@@ -72,19 +72,21 @@ public class GameListener implements Listener {
                         return;
                     if (shooter instanceof Player) {
                         attacker = (Player) shooter;
-                        event.setCancelled(true);
+                        attackerArena = OITG.instance.getArenaManager().getArena(attacker);
                         if (!defenderArena.equals(attackerArena)) {
+                            event.setCancelled(true);
                             return;
                         }
                         if (!(event.getDamager() instanceof Arrow))
                             return;
+                        event.setCancelled(true);
                         defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was sniped by " +
                                 ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
                         defenderArena.killPlayer(defender);
                         defenderArena.incrementKills(attacker);
                         return;
                     }
-                    if (shooter instanceof Creature || shooter instanceof Flying && !defenderArena.isMobCombatAllowed()) {
+                    if ((shooter instanceof Creature || shooter instanceof Flying) && !defenderArena.isMobCombatAllowed()) {
                         event.setCancelled(true);
                         return;
                     }

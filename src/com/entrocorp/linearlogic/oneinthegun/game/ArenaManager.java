@@ -61,7 +61,7 @@ public class ArenaManager {
                 for (Arena arena : arenas)
                     arena.decrementTimer();
             }
-        }, 1L, 1L);
+        }, 1L, 20L);
         areTimersRunning = true;
     }
 
