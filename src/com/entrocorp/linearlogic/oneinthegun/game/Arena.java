@@ -59,11 +59,11 @@ public class Arena implements Serializable {
     }
 
     public void init() {
-        if (playerLimit < 2)
+        if (playerLimit < 2 && playerLimit != -1)
             playerLimit = 10;
-        if (timeLimit < 10)
-            timeLimit = 600;
-        if (killLimit != -1 && killLimit < 1)
+        if (timeLimit < 10 && timeLimit != -1)
+            timeLimit = 300;
+        if (killLimit < 1 && killLimit != -1)
             killLimit = 10;
         if (spawns == null)
             spawns = new ArrayList<SerializableLocation>();
@@ -205,9 +205,12 @@ public class Arena implements Serializable {
     }
 
     public void setPlayerLimit(int limit) {
-        this.playerLimit = limit;
+        if (playerLimit == limit)
+            return;
+        playerLimit = limit;
         if (OITG.saveOnEdit)
             save();
+        populateSigns();
     }
 
     public int getTimeLimit() {
@@ -215,7 +218,7 @@ public class Arena implements Serializable {
     }
 
     public String getTimeLimitFormatted() {
-        return String.format("%02d:%02d", timeLimit / 60, timeLimit % 60);
+        return timeLimit == -1 ? "none" : String.format("%02d:%02d", timeLimit / 60, timeLimit % 60);
     }
 
     public void setTimeLimit(int limit) {

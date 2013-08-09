@@ -53,6 +53,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandSave(sender, newArgs);
         else if (label.equals("setgloballobby"))
             cmd = new CommandSetGlobalLobby(sender, newArgs);
+        else if (label.equals("settings"))
+            cmd = new CommandSettings(sender, newArgs);
         else if (label.equals("setlobby"))
             cmd = new CommandSetLobby(sender, newArgs);
         else if (label.equals("version"))

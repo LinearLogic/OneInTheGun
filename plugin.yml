@@ -31,6 +31,30 @@ permissions:
     oneinthegun.arena.save:
         description: Permission to save an arena (used if the 'save-arena-on-edit' node is set to 'false' in the config)
         default: op
+    oneinthegun.arena.settings.playerlimit:
+        description: Permission to set the player limit of an arena
+        default: op
+    oneinthegun.arena.settings.timelimit:
+        description: Permission to set the time limit of an arena round
+        default: op
+    oneinthegun.arena.settings.killlimit:
+        description: Permission to set the kill limit of an arena
+        default: op
+    oneinthegun.arena.settings.blockplace:
+        description: Permission to toggle whether block placing is enabled in an arena
+        default: op
+    oneinthegun.arena.settings.blockbreak:
+        description: Permission to toggle whether block breaking is enabled in an arena
+        default: op
+    oneinthegun.arena.settings.healthregen:
+        description: Permission to toggle whether health regeneration is enabled in an arena
+        default: op
+    oneinthegun.arena.settings.hunger:
+        description: Permission to toggle whether hunger is enabled in an arena
+        default: op
+    oneinthegun.arena.settings.mobcombat:
+        description: Permission to toggle whether combat with mobs is allowed in an arena
+        default: op
     oneinthegun.arena.setlobby:
         description: Permission to place the lobby of an arena
         default: op
