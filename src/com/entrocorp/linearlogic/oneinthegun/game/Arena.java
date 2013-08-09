@@ -50,6 +50,7 @@ public class Arena implements Serializable {
     private transient Objective objective;
 
     private transient boolean ingame;
+    private transient Set<Pair<Player, HLComparablePair<Integer, Integer>>> leaderboard;
     private transient TriMap<Player, Integer, Integer> playerData;
 
     public Arena(String name) {
@@ -69,6 +70,7 @@ public class Arena implements Serializable {
         if (signLocations == null)
             signLocations = new ArrayList<SerializableLocation>();
         playerData = new TriMap<Player, Integer, Integer>();
+        leaderboard = playerData.sortedEntrySet();
         board = OITG.instance.getServer().getScoreboardManager().getNewScoreboard();
         objective = board.registerNewObjective("kills", "totalKillCount");
         objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\\u0171 Kills \\u0187");
@@ -192,6 +194,8 @@ public class Arena implements Serializable {
 
     public void setIngame(boolean ingame) {
         this.ingame = ingame;
+        if (ingame)
+            updateLeaderboard();
     }
 
     public int getPlayerLimit() {
@@ -358,10 +362,6 @@ public class Arena implements Serializable {
         return playerData.keySet().toArray(new Player[playerData.size()]);
     }
 
-    public Set<Pair<Player, HLComparablePair<Integer, Integer>>> getSortedPlayerScores() {
-        return playerData.sortedEntrySet();
-    }
-
     public int getPlayerCount() {
         return playerData.size();
     }
@@ -386,6 +386,8 @@ public class Arena implements Serializable {
         board.resetScores(player);
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         populateSigns();
+        if (ingame)
+            updateLeaderboard();
         if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
             OITG.instance.getGameListener().setRegistered(false);
         broadcast(player.getName() + " has fled the arena!");
@@ -397,8 +399,17 @@ public class Arena implements Serializable {
         playerData.clear();
         ingame = false;
         populateSigns();
+        updateLeaderboard();
         if (OITG.instance.getArenaManager().areAllArenasEmpty())
             OITG.instance.getGameListener().setRegistered(false);
+    }
+
+    public Set<Pair<Player, HLComparablePair<Integer, Integer>>> getLeaderboard() {
+        return leaderboard;
+    }
+
+    public void updateLeaderboard() {
+        leaderboard = playerData.sortedEntrySet();
     }
 
     public int getKills(Player player) {
@@ -409,6 +420,7 @@ public class Arena implements Serializable {
     public boolean setKills(Player player, int kills) {
         if (!playerData.setX(player, kills))
             return false;
+        updateLeaderboard();
         return true;
     }
 
@@ -424,6 +436,7 @@ public class Arena implements Serializable {
     public boolean setDeaths(Player player, int deaths) {
         if (!playerData.setY(player, deaths))
             return false;
+        updateLeaderboard();
         return true;
     }
 

@@ -40,7 +40,7 @@ public class CommandLeaderboard extends OITGArenaCommand {
                 "[" + ChatColor.DARK_RED + "Leaderboard: " + arena.toString() + ChatColor.DARK_GRAY + ChatColor.BOLD +
                 " | " + ChatColor.GRAY + "Page " + pageNum + " of " + pageMax + ChatColor.DARK_GRAY + "]" + ChatColor.RED +
                 "===" + ChatColor.DARK_GRAY + "[]");
-        Set<Pair<Player, HLComparablePair<Integer, Integer>>> scores = arena.getSortedPlayerScores();
+        Set<Pair<Player, HLComparablePair<Integer, Integer>>> scores = arena.getLeaderboard();
         Iterator<Pair<Player, HLComparablePair<Integer, Integer>>> iter = scores.iterator();
         int index = 0, start = (pageNum - 1) * 10, end = start + 10;
         while (++index <= scores.size()) {
