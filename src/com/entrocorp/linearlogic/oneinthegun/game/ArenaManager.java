@@ -53,11 +53,9 @@ public class ArenaManager {
         arenas.clear();
     }
 
-    public boolean areTimersRunning() {
-        return areTimersRunning;
-    }
-
     public void startTimers() {
+        if (areTimersRunning)
+            return;
         timerTaskID = OITG.instance.getServer().getScheduler().scheduleSyncRepeatingTask(OITG.instance, new Runnable() {
             public void run() {
                 for (Arena arena : arenas)
@@ -68,6 +66,8 @@ public class ArenaManager {
     }
 
     public void stopTimers() {
+        if (!areTimersRunning)
+            return;
         OITG.instance.getServer().getScheduler().cancelTask(timerTaskID);
         areTimersRunning = false;
     }
@@ -110,6 +110,13 @@ public class ArenaManager {
             if (arena.getPlayerCount() == 0)
                 matches[counter++] = arena;
         return Arrays.copyOf(matches, counter);
+    }
+
+    public boolean areAnyArenasIngame() {
+        for (Arena arena : arenas)
+            if (arena.isIngame())
+                return true;
+        return false;
     }
 
     public boolean areAllArenasEmpty() {

@@ -250,9 +250,12 @@ public class Arena implements Serializable {
         if (ingame) {
             updateLeaderboard();
             timer = timeLimit;
+            OITG.instance.getArenaManager().startTimers();
         }
         timer = -1;
         populateSigns();
+        if (!OITG.instance.getArenaManager().areAnyArenasIngame())
+            OITG.instance.getArenaManager().stopTimers();
     }
 
     public int getTimerRemaining() {
@@ -486,10 +489,12 @@ public class Arena implements Serializable {
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         if (broadcast)
             broadcast(player.getName() + " has fled the arena!");
-        if (ingame)
+        if (ingame) {
+            if (playerData.size() == 1) {
+                endgame();
+                return true;
+            }
             updateLeaderboard();
-        if (playerData.size() == 1) {
-            endgame();
             return true;
         }
         if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
