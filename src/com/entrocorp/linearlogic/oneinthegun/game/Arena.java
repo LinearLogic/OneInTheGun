@@ -60,8 +60,8 @@ public class Arena implements Serializable {
     public void init() {
         if (playerLimit < 2)
             playerLimit = 10;
-        if (timeLimit < 2) // Ten seconds
-            timeLimit = 120;
+        if (timeLimit < 10)
+            timeLimit = 600;
         if (killLimit != -1 && killLimit < 1)
             killLimit = 10;
         if (spawns == null)
@@ -71,7 +71,7 @@ public class Arena implements Serializable {
         playerData = new TriMap<Player, Integer, Integer>();
         board = OITG.instance.getServer().getScoreboardManager().getNewScoreboard();
         objective = board.registerNewObjective("kills", "totalKillCount");
-        objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "Ç Kills È");
+        objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\\u0171 Kills \\u0187");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         ingame = false;
     }
@@ -407,7 +407,13 @@ public class Arena implements Serializable {
     }
 
     public boolean setKills(Player player, int kills) {
-        return playerData.setX(player, kills);
+        if (!playerData.setX(player, kills))
+            return false;
+        return true;
+    }
+
+    public boolean incrementKills(Player player) {
+        return setKills(player, getKills(player) + 1);
     }
 
     public int getDeaths(Player player) {
@@ -416,7 +422,13 @@ public class Arena implements Serializable {
     }
 
     public boolean setDeaths(Player player, int deaths) {
-        return playerData.setY(player, deaths);
+        if (!playerData.setY(player, deaths))
+            return false;
+        return true;
+    }
+
+    public boolean incrementDeaths(Player player) {
+        return setDeaths(player, getDeaths(player) + 1);
     }
 
     public double getKDR(Player player) {
