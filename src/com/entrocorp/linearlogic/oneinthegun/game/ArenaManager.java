@@ -13,6 +13,9 @@ import com.entrocorp.linearlogic.oneinthegun.OITG;
 
 public class ArenaManager {
 
+    private boolean areTimersRunning = false;
+    private int timerTaskID;
+
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
     private Location globalLobby;
 
@@ -41,6 +44,7 @@ public class ArenaManager {
     }
 
     public void shutdown() {
+        stopTimers();
         for (Arena arena : arenas) {
             arena.clearPlayers();
             arena.populateSigns();
@@ -49,9 +53,23 @@ public class ArenaManager {
         arenas.clear();
     }
 
-    public void decrementTimers() {
-        for (Arena arena : arenas)
-            arena.decrementTimer();
+    public boolean areTimersRunning() {
+        return areTimersRunning;
+    }
+
+    public void startTimers() {
+        timerTaskID = OITG.instance.getServer().getScheduler().scheduleSyncRepeatingTask(OITG.instance, new Runnable() {
+            public void run() {
+                for (Arena arena : arenas)
+                    arena.decrementTimer();
+            }
+        }, 1L, 1L);
+        areTimersRunning = true;
+    }
+
+    public void stopTimers() {
+        OITG.instance.getServer().getScheduler().cancelTask(timerTaskID);
+        areTimersRunning = false;
     }
 
     public Arena[] getArenas() {

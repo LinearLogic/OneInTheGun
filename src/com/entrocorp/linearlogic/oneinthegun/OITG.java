@@ -37,6 +37,7 @@ public class OITG extends JavaPlugin {
         getServer().getPluginManager().registerEvents(generalListener, instance);
         logInfo("Loading arenas...");
         am.loadArenas();
+        am.startTimers();
         logInfo("Successfully enabled. Game on!");
     }
 
