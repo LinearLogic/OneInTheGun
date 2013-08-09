@@ -14,6 +14,7 @@ public abstract class OITGArenaCommand extends OITGCommand {
     public OITGArenaCommand(CommandSender sender, String[] args, int minimumArgs, boolean mustBeEmpty, String usage,
             String permission, boolean mustBePlayer) {
         super(sender, args, minimumArgs == 0 ? 1 : minimumArgs, usage, permission, mustBePlayer);
+        this.mustBeEmpty = mustBeEmpty;
     }
 
     public boolean validateArena() {
