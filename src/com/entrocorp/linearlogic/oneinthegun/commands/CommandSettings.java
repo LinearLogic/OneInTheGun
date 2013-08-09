@@ -140,11 +140,11 @@ public class CommandSettings extends OITGArenaCommand {
         if (setting.equals("mob-combat")) {
             if (!checkPermission("oneinthegun.arena.settings.mobcombat"))
                 return;
-            if (arena.isMobInteractAllowed() == flag) {
+            if (arena.isMobCombatAllowed() == flag) {
                 sender.sendMessage(OITG.prefix + "Mob combat is already " + (flag ? "enabled." : "disabled."));
                 return;
             }
-            arena.allowMobInteract(flag);
+            arena.allowMobCombat(flag);
             sender.sendMessage(OITG.prefix + "Combat with mobs in arena " + arena.toString() + " is now " + (flag ? "enabled." : "disabled."));
             return;
         }

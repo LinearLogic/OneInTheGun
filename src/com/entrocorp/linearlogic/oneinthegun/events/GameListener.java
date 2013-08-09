@@ -74,12 +74,12 @@ public class GameListener implements Listener {
                         defenderArena.incrementKills(attacker);
                         return;
                     }
-                    if (shooter instanceof Creature || shooter instanceof Flying && !defenderArena.isMobInteractAllowed())
+                    if (shooter instanceof Creature || shooter instanceof Flying && !defenderArena.isMobCombatAllowed())
                         event.setCancelled(true);
                     return;
                 }
                 if ((event.getCause().equals(DamageCause.ENTITY_ATTACK) || event.getCause().equals(DamageCause.WITHER) ||
-                        event.getCause().equals(DamageCause.ENTITY_EXPLOSION)) && !defenderArena.isMobInteractAllowed()) {
+                        event.getCause().equals(DamageCause.ENTITY_EXPLOSION)) && !defenderArena.isMobCombatAllowed()) {
                     event.setCancelled(true);
                     return;
                 }

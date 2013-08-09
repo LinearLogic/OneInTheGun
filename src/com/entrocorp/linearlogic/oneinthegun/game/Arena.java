@@ -37,7 +37,7 @@ public class Arena implements Serializable {
     private boolean allowBlockBreak;
     private boolean allowHealthRegen;
     private boolean allowHunger;
-    private boolean allowMobInteract;
+    private boolean allowMobCombat;
 
     private int playerLimit;
     private int timeLimit;
@@ -200,14 +200,14 @@ public class Arena implements Serializable {
             save();
     }
 
-    public boolean isMobInteractAllowed() {
-        return allowMobInteract;
+    public boolean isMobCombatAllowed() {
+        return allowMobCombat;
     }
 
-    public void allowMobInteract(boolean allowed) {
-        if (allowMobInteract == allowed)
+    public void allowMobCombat(boolean allowed) {
+        if (allowMobCombat == allowed)
             return;
-        allowMobInteract = allowed;
+        allowMobCombat = allowed;
         if (OITG.saveOnEdit)
             save();
     }
