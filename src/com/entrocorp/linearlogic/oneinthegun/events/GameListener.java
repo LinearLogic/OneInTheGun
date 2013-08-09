@@ -60,6 +60,8 @@ public class GameListener implements Listener {
             if (attacker == null) {
                 if (event.getCause().equals(DamageCause.PROJECTILE)) {
                     LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
+                    if (shooter == null)
+                        return;
                     if (shooter instanceof Player) {
                         attacker = (Player) shooter;
                         event.setCancelled(true);
@@ -74,14 +76,32 @@ public class GameListener implements Listener {
                         defenderArena.incrementKills(attacker);
                         return;
                     }
-                    if (shooter instanceof Creature || shooter instanceof Flying && !defenderArena.isMobCombatAllowed())
+                    if (shooter instanceof Creature || shooter instanceof Flying && !defenderArena.isMobCombatAllowed()) {
                         event.setCancelled(true);
+                        return;
+                    }
+                    if (defender.getHealth() - event.getDamage() <= 0.0) {
+                        event.setCancelled(true);
+                        defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was killed by a " +
+                        shooter.getType().toString().toLowerCase().replaceAll("_", " ") + "!");
+                        defenderArena.killPlayer(defender);
+                    }
                     return;
                 }
-                if ((event.getCause().equals(DamageCause.ENTITY_ATTACK) || event.getCause().equals(DamageCause.WITHER) ||
-                        event.getCause().equals(DamageCause.ENTITY_EXPLOSION)) && !defenderArena.isMobCombatAllowed()) {
-                    event.setCancelled(true);
-                    return;
+                if (event.getCause().equals(DamageCause.ENTITY_ATTACK) || event.getCause().equals(DamageCause.ENTITY_EXPLOSION) ||
+                        event.getCause().equals(DamageCause.WITHER)) {
+                    if (!defenderArena.isMobCombatAllowed()) {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    if (defender.getHealth() - event.getDamage() <= 0.0) {
+                        event.setCancelled(true);
+                        defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was killed by a " +
+                                (event.getCause().equals(DamageCause.ENTITY_EXPLOSION) ? "creeper" :
+                                event.getCause().equals(DamageCause.WITHER) ? "wither" :
+                                event.getDamager().getType().toString().toLowerCase().replaceAll("_", " ")) + "!");
+                        defenderArena.killPlayer(defender);
+                    }
                 }
                 return;
             }
@@ -89,7 +109,23 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+            if (defender.getHealth() - event.getDamage() <= 0.0) {
+                event.setCancelled(true);
+                defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was killed by " +
+                        ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
+                defenderArena.killPlayer(defender);
+                defenderArena.incrementKills(attacker);
+            }
+            return;
         }
+        if (attackerArena == null)
+            return;
+        if (defender != null) {
+            event.setCancelled(true);
+            return;
+        }
+        if (!attackerArena.isMobCombatAllowed())
+            event.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true)
