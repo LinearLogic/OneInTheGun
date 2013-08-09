@@ -16,6 +16,9 @@ permissions:
     oneinthegun.arena.forcestart:
         description: Permission to force-start the round in an arena
         default: op
+    oneinthegun.arena.forcestop:
+        description: Permission to force-stop the round in an arena
+        default: op
     oneinthegun.arena.info:
         description: Permission to view arena round info and settings
         default: true

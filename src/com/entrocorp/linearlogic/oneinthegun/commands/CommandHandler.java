@@ -37,6 +37,8 @@ public class CommandHandler implements CommandExecutor {
             cmd = new CommandDelete(sender, newArgs);
         else if (label.equals("forcestart") || label.equals("fstart"))
             cmd = new CommandForceStart(sender, newArgs);
+        else if (label.endsWith("forcestop") || label.equals("fstop"))
+            cmd = new CommandForceStop(sender, newArgs);
         else if (label.equals("info"))
             cmd = new CommandInfo(sender, newArgs);
         else if (label.equals("join"))
