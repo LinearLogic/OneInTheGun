@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
@@ -116,5 +117,13 @@ public class GeneralListener implements Listener {
                     joined.teleport(globby);
             }
         }, 5L);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
+        if (arena == null)
+            return;
+        arena.removePlayer(event.getPlayer());
     }
 }
