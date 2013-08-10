@@ -26,21 +26,21 @@ public class CommandSettings extends OITGArenaCommand {
         if (setting.equals("start-count")) {
             if (!checkPermission("oneinthegun.arena.settings.startcount"))
                 return;
-            int limit = 0;
+            int count = 0;
             try {
-                limit = Integer.parseInt(args[2]);
+                count = Integer.parseInt(args[2]);
             } catch (NumberFormatException e) { }
-            if (limit < 2 && limit != -1) {
+            if (count < 2) {
                 sender.sendMessage(OITG.prefix + "The start count must be a number greater than 1.");
                 return;
             }
-            if (limit > arena.getPlayerLimit()) {
+            if (count > arena.getPlayerLimit()) {
                 sender.sendMessage(OITG.prefix + "The start count cannot be greater than the arena's player limit (" +
                         ChatColor.LIGHT_PURPLE + arena.getPlayerLimit() + ChatColor.GRAY + ").");
                 return;
             }
-            arena.setPlayerLimit(limit);
-            sender.sendMessage(OITG.prefix + "Updated the player limit for arena " + arena.toString());
+            arena.setStartCount(count);
+            sender.sendMessage(OITG.prefix + "Updated the start count for arena " + arena.toString());
             return;
         }
 
