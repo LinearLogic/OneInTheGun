@@ -452,15 +452,15 @@ public class Arena implements Serializable {
     }
 
     public void populateSigns() {
+        String[] lines = {name, getState(), playerData.size() + "/" + playerLimit, playerData.size() < startCount ?
+            startCount - playerData.size() + " to start" : null};
         for (SerializableLocation sloc : signLocations) {
             Block block = sloc.asBukkitLocation().getBlock();
             if (!block.getType().equals(Material.SIGN_POST) && !block.getType().equals(Material.WALL_SIGN))
                 continue;
             Sign sign = (Sign) block.getState();
-            sign.setLine(0, name);
-            sign.setLine(1, null);
-            sign.setLine(2, getState());
-            sign.setLine(3, playerData.size() + "/" + playerLimit);
+            for (int i = 0; i < 4; i++)
+                sign.setLine(i, lines[i]);
             sign.update();
         }
     }
