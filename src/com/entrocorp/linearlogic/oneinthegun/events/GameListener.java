@@ -80,6 +80,8 @@ public class GameListener implements Listener {
                         if (!(event.getDamager() instanceof Arrow))
                             return;
                         event.setCancelled(true);
+                        if (defender == attacker)
+                            return;
                         defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was sniped by " +
                                 ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
                         defenderArena.killPlayer(defender);
