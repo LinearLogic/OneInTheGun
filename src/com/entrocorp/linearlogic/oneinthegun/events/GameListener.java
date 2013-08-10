@@ -16,6 +16,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -161,6 +163,15 @@ public class GameListener implements Listener {
         Player player = (Player) event.getEntity();
         Arena arena = OITG.instance.getArenaManager().getArena(player);
         if (arena != null && !arena.isHungerAllowed())
+            event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!event.getInventory().getType().equals(InventoryType.CRAFTING)) // Survival inventory
+            return;
+        Arena arena = OITG.instance.getArenaManager().getArena((Player) event.getWhoClicked());
+        if (arena != null && !arena.isItemDroppingAllowed() && event.getSlot() == -999)
             event.setCancelled(true);
     }
 
