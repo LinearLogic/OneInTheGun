@@ -38,6 +38,7 @@ public class CommandForceStart extends OITGArenaCommand {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "The delay must be a number no less than zero.");
             return;
         }
+        arena.setStage(1);
         arena.setTimer(delay);
         sender.sendMessage(OITG.prefix + ChatColor.GREEN + "Forced the round in arena " + arena.toString() +
                 " to start in " + delay + " seconds.");
