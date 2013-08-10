@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
@@ -78,8 +80,8 @@ public class Arena implements Serializable {
         playerData = new TriMap<Player, Integer, Integer>();
         leaderboard = playerData.sortedEntrySet();
         board = OITG.instance.getServer().getScoreboardManager().getNewScoreboard();
-        objective = board.registerNewObjective("kills", "totalKillCount");
-        objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\\u0171 Kills \\u0187");
+        objective = board.registerNewObjective("kills", "dummy");
+        objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\u00AB Kills \u00BB");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         setIngame(false);
     }
@@ -250,6 +252,7 @@ public class Arena implements Serializable {
         populateSigns();
         if (ingame) {
             updateLeaderboard();
+            updateScoreboard();
             timer = timeLimit;
             OITG.instance.getArenaManager().startTimers();
             return;
@@ -484,7 +487,6 @@ public class Arena implements Serializable {
     public boolean removePlayer(Player player, boolean broadcast) {
         if (playerData.remove(player) == null)
             return false;
-        board.resetScores(player);
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         populateSigns();
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
@@ -496,6 +498,15 @@ public class Arena implements Serializable {
                 return true;
             }
             updateLeaderboard();
+            Iterator<Pair<Player, HLComparablePair<Integer, Integer>>> iter = leaderboard.iterator();
+            for (int i = 0; i < 10; i++) {
+                if (!iter.hasNext())
+                    break;
+                if (iter.next().getX().equals(player)) { // Player was in the top 10 and thus was listed on the scoreboard
+                    updateScoreboard();
+                    break;
+                }
+            }
             return true;
         }
         if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
@@ -531,9 +542,20 @@ public class Arena implements Serializable {
     public boolean setKills(Player player, int kills) {
         if (!playerData.setX(player, kills))
             return false;
-        if (killLimit != -1 && kills >= killLimit)
+        if (killLimit != -1 && kills >= killLimit) {
             endgame();
+            return true;
+        }
         updateLeaderboard();
+        Iterator<Pair<Player, HLComparablePair<Integer, Integer>>> iter = leaderboard.iterator();
+        for (int i = 0; i < 10; i++) {
+            if (!iter.hasNext())
+                break;
+            if (iter.next().getX().equals(player)) {
+                updateScoreboard();
+                break;
+            }
+        }
         return true;
     }
 
@@ -586,12 +608,22 @@ public class Arena implements Serializable {
         player.getInventory().setItem(8, new ItemStack(Material.ARROW));
     }
 
-    public void loadScoreboard(boolean reset) {
-        for (Player player : playerData.keySet()) {
-            if (reset)
-                objective.getScore(player).setScore(0);
-            player.setScoreboard(board);
+    public void updateScoreboard() {
+        Iterator<Pair<Player, HLComparablePair<Integer, Integer>>> iter = leaderboard.iterator();
+        for (int i = 0; i < 10; i++) {
+            if (!iter.hasNext())
+                break;
+            Pair<Player, HLComparablePair<Integer, Integer>> entry = iter.next();
+            Score score = objective.getScore(entry.getX());
+            if (entry.getY().getX() == 0) {
+                score.setScore(1);
+                score.setScore(0);
+            } else {
+                score.setScore(entry.getY().getX());
+            }
         }
+        for (Player player : playerData.keySet())
+            player.setScoreboard(board);
     }
 
     public void closeScoreboard() {
