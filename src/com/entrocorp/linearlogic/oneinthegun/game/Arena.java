@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class Arena implements Serializable {
 
     private transient Set<Pair<Player, HLComparablePair<Integer, Integer>>> leaderboard;
     private transient TriMap<Player, Integer, Integer> playerData;
-
+    private transient Set<Player> godmodePlayers;
 
     public Arena(String name) {
         this.name = name;
@@ -82,6 +83,7 @@ public class Arena implements Serializable {
             signLocations = new ArrayList<SerializableLocation>();
         playerData = new TriMap<Player, Integer, Integer>();
         leaderboard = playerData.sortedEntrySet();
+        godmodePlayers = new HashSet<Player>();
         board = OITG.instance.getServer().getScoreboardManager().getNewScoreboard();
         objective = board.registerNewObjective("kills", "dummy");
         objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\u00AB Kills \u00BB");
@@ -526,6 +528,7 @@ public class Arena implements Serializable {
     public boolean removePlayer(Player player, boolean broadcast) {
         if (playerData.remove(player) == null)
             return false;
+        godmodePlayers.remove(player);
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         populateSigns();
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
@@ -567,6 +570,7 @@ public class Arena implements Serializable {
         for (Player player : playerData.keySet())
             player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         playerData.clear();
+        godmodePlayers.clear();
         setStage(0);
         populateSigns();
         updateLeaderboard();
@@ -646,6 +650,28 @@ public class Arena implements Serializable {
             return false;
         playerData.put(player, kills, deaths);
         return true;
+    }
+
+    public Player[] getPlayersInGodmode() {
+        return godmodePlayers.toArray(new Player[godmodePlayers.size()]);
+    }
+
+    public boolean isPlayerInGodmode(Player player) {
+        return godmodePlayers.contains(player);
+    }
+
+    public void setPlayerInGodmode(Player player, boolean godmode) {
+        if (godmode)
+            godmodePlayers.add(player);
+        else
+            godmodePlayers.remove(player);
+    }
+
+    public void setAllPlayersInGodmode(boolean godmode) {
+        if (godmode)
+            godmodePlayers.addAll(playerData.keySet());
+        else
+            godmodePlayers.clear();
     }
 
     public void armPlayer(Player player) {

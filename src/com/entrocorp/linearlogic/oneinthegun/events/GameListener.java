@@ -67,6 +67,10 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
+            if (defenderArena.isPlayerInGodmode(defender)) {
+                event.setCancelled(true);
+                return;
+            }
             if (attacker == null) {
                 if (event.getCause().equals(DamageCause.PROJECTILE)) {
                     LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
