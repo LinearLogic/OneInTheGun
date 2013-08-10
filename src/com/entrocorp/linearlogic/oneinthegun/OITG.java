@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.entrocorp.linearlogic.oneinthegun.commands.CommandHandler;
+import com.entrocorp.linearlogic.oneinthegun.commands.OITGCommandHandler;
 import com.entrocorp.linearlogic.oneinthegun.events.GameListener;
 import com.entrocorp.linearlogic.oneinthegun.events.GeneralListener;
 import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
@@ -21,7 +21,7 @@ public class OITG extends JavaPlugin {
     public static int spawnShieldDuration;
 
     private ArenaManager am;
-    private CommandHandler ch;
+    private OITGCommandHandler ch;
     private GameListener gameListener;
     private GeneralListener generalListener;
 
@@ -33,7 +33,7 @@ public class OITG extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
         logInfo("Registering command handler...");
-        ch = new CommandHandler();
+        ch = new OITGCommandHandler();
         getCommand("oitg").setExecutor(ch);
         logInfo("Registering listeners...");
         gameListener = new GameListener();

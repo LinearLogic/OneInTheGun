@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 
-public class CommandHandler implements CommandExecutor {
+public class OITGCommandHandler implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
