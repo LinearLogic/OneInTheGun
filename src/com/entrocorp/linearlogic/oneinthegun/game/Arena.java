@@ -131,7 +131,7 @@ public class Arena implements Serializable {
             public void run() {
                 setAllPlayersInGodmode(false);
             }
-        }, OITG.instance.getConfig().getInt("timers.spawn-shield") * 20L);
+        }, OITG.spawnShieldDuration * 20L);
         setStage(2);
         broadcast("" + ChatColor.RED + ChatColor.BOLD + "Game on!");
     }
@@ -273,7 +273,7 @@ public class Arena implements Serializable {
                     OITG.instance.getArenaManager().stopTimers();
                 break;
             case 1:
-                timer = OITG.instance.getConfig().getInt("timers.pregame-countdown");
+                timer = OITG.pregameDuration;
                 if (timer < 1)
                     timer = 1;
                 OITG.instance.getArenaManager().startTimers();
@@ -648,7 +648,7 @@ public class Arena implements Serializable {
             public void run() {
                 godmodePlayers.remove(player);
             }
-        }, OITG.instance.getConfig().getInt("timers.spawn-shield") * 20L);
+        }, OITG.spawnShieldDuration * 20L);
     }
 
     public double getKDR(Player player) {

@@ -13,8 +13,12 @@ import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
 public class OITG extends JavaPlugin {
 
     public static OITG instance;
+
     public static String prefix;
+    public static boolean joinToLobby;
     public static boolean saveOnEdit;
+    public static int pregameDuration;
+    public static int spawnShieldDuration;
 
     private ArenaManager am;
     private CommandHandler ch;
@@ -59,9 +63,12 @@ public class OITG extends JavaPlugin {
     @Override
     public void reloadConfig() {
         super.reloadConfig();
-        saveOnEdit = getConfig().getBoolean("save-arena-on-edit");
         prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITG" : "One" +
                 ChatColor.DARK_GRAY + "InThe" + ChatColor.GOLD + "Gun") + ChatColor.GRAY + "] ";
+        joinToLobby = getConfig().getBoolean("join-to-lobby");
+        saveOnEdit = getConfig().getBoolean("save-arena-on-edit");
+        pregameDuration = getConfig().getInt("timers.pregame-countdown");
+        spawnShieldDuration = getConfig().getInt("timers.spawn-shield");
         am.setGlobalLobby(new Location(getServer().getWorld(getConfig().getString("global-lobby.world")),
                 getConfig().getDouble("global-lobby.x"), getConfig().getDouble("global-lobby.y"), getConfig().getDouble("global-lobby.z"),
                 (float) getConfig().getDouble("global-lobby.yaw"), (float) getConfig().getDouble("global-lobby.pitch")), false);

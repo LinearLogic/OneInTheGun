@@ -107,7 +107,7 @@ public class GeneralListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (!OITG.instance.getConfig().getBoolean("join-to-lobby"))
+        if (!OITG.joinToLobby)
             return;
         final Player joined = event.getPlayer();
         OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
