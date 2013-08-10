@@ -10,7 +10,7 @@ public class CommandSave extends OITGArenaCommand {
     }
 
     public void run() {
-        sender.sendMessage(arena.save() ? ChatColor.GREEN + "Saved arena " + arena.toString() + "." : ChatColor.RED +
+        sender.sendMessage(arena.save(false) ? ChatColor.GREEN + "Saved arena " + arena.toString() + "." : ChatColor.RED +
                 "An critical error occurred while attempting to save arena " + arena.toString() + ".");
     }
 

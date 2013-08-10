@@ -89,7 +89,7 @@ public class Arena implements Serializable {
         setStage(0);
     }
 
-    public boolean save() {
+    public boolean save(boolean logSuccess) {
         try {
             File arenaDir = new File(OITG.instance.getDataFolder() + File.separator + "arenas");
             arenaDir.mkdirs();
@@ -142,7 +142,7 @@ public class Arena implements Serializable {
     public void setName(String name) {
         this.name = name;
         delete();
-        save();
+        save(false);
         populateSigns();
     }
 
@@ -169,7 +169,7 @@ public class Arena implements Serializable {
             return;
         allowBlockPlace = allowed;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public boolean isBlockBreakingAllowed() {
@@ -181,7 +181,7 @@ public class Arena implements Serializable {
             return;
         allowBlockBreak = allowed;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public boolean isHealthRegenAllowed() {
@@ -193,7 +193,7 @@ public class Arena implements Serializable {
             return;
         allowHealthRegen = allowed;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public boolean isHungerAllowed() {
@@ -205,7 +205,7 @@ public class Arena implements Serializable {
             return;
         allowHunger = allowed;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public boolean isItemDroppingAllowed() {
@@ -217,7 +217,7 @@ public class Arena implements Serializable {
             return;
         allowItemDrop = allowed;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public boolean isItemPickupAllowed() {
@@ -229,7 +229,7 @@ public class Arena implements Serializable {
             return;
         allowItemPickup = allowed;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public boolean isMobCombatAllowed() {
@@ -241,7 +241,7 @@ public class Arena implements Serializable {
             return;
         allowMobCombat = allowed;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public boolean isIngame() {
@@ -325,7 +325,7 @@ public class Arena implements Serializable {
             return;
         startCount = count;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
         populateSigns();
     }
 
@@ -338,7 +338,7 @@ public class Arena implements Serializable {
             return;
         playerLimit = limit;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
         populateSigns();
     }
 
@@ -353,7 +353,7 @@ public class Arena implements Serializable {
     public void setTimeLimit(int limit) {
         timeLimit = limit;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public int getKillLimit() {
@@ -363,7 +363,7 @@ public class Arena implements Serializable {
     public void setKillLimit(int limit) {
         killLimit = limit;
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public Location getLobby() {
@@ -373,7 +373,7 @@ public class Arena implements Serializable {
     public void setLobby(Location loc) {
         lobby = new SerializableLocation(loc);
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public Location[] getSpawns() {
@@ -394,13 +394,13 @@ public class Arena implements Serializable {
     public void addSpawn(Location loc) {
         spawns.add(new SerializableLocation(loc));
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public void clearSpawns() {
         spawns.clear();
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public Location[] getSignLocations() {
@@ -421,7 +421,7 @@ public class Arena implements Serializable {
         signLocations.add(sloc);
         populateSign(loc);
         if (OITG.saveOnEdit)
-            save();
+            save(false);
         return true;
     }
 
@@ -429,7 +429,7 @@ public class Arena implements Serializable {
         wipeSign(loc);
         signLocations.remove(new SerializableLocation(loc));
         if (OITG.saveOnEdit)
-            save();
+            save(false);
     }
 
     public void clearSignLocations() {

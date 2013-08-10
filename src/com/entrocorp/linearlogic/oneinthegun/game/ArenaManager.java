@@ -40,7 +40,7 @@ public class ArenaManager {
 
     public void saveArenas() {
         for (Arena arena : arenas)
-            arena.save();
+            arena.save(true);
     }
 
     public void shutdown() {
@@ -48,7 +48,7 @@ public class ArenaManager {
         for (Arena arena : arenas) {
             arena.clearPlayers();
             arena.populateSigns();
-            arena.save();
+            arena.save(true);
         }
         arenas.clear();
     }
