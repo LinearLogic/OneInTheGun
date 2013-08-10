@@ -1,6 +1,7 @@
 use-abbreviated-prefix: false
-join-to-lobby: true
+pregame-countdown: 60
 save-arena-on-edit: false
+join-to-lobby: true
 global-lobby:
     x: 100
     y: 66

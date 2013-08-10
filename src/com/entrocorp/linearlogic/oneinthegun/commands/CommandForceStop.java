@@ -17,7 +17,7 @@ public class CommandForceStop extends OITGArenaCommand {
             return;
         }
         if (args.length == 1) {
-            arena.setTimeRemaining(0);
+            arena.setTimer(0);
             sender.sendMessage(OITG.prefix + ChatColor.GREEN + "Forced the round in arena " + arena.toString() + " to end immediately.");
             return;
         }
@@ -29,7 +29,7 @@ public class CommandForceStop extends OITGArenaCommand {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "The delay must be a number no less than zero.");
             return;
         }
-        arena.setTimeRemaining(delay);
+        arena.setTimer(delay);
         sender.sendMessage(OITG.prefix + ChatColor.GREEN + "Forced the round in arena " + arena.toString() + " to end in " +
                 delay + " seconds.");
     }

@@ -54,7 +54,7 @@ public class Arena implements Serializable {
     private transient Scoreboard board;
     private transient Objective objective;
 
-    private transient boolean ingame;
+    private transient int stage;
     private transient int timer;
 
     private transient Set<Pair<Player, HLComparablePair<Integer, Integer>>> leaderboard;
@@ -83,7 +83,7 @@ public class Arena implements Serializable {
         objective = board.registerNewObjective("kills", "dummy");
         objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\u00AB Kills \u00BB");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        setIngame(false);
+        setStage(0);
     }
 
     public boolean save() {
@@ -121,11 +121,11 @@ public class Arena implements Serializable {
             armPlayer(player);
             player.teleport(spawns[++index % spawns.length]);
         }
-        setIngame(true);
+        setStage(2);
         broadcast("" + ChatColor.RED + ChatColor.BOLD + "Game on!");
     }
 
-    private void endgame() {
+    private void end() {
         OITG.instance.getServer().broadcastMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD +
                 leaderboard.iterator().next().getX().getName() + ChatColor.GRAY + " emerges victorious from arena " +
                 ChatColor.YELLOW + name + ChatColor.GRAY + "!");
@@ -242,54 +242,72 @@ public class Arena implements Serializable {
     }
 
     public boolean isIngame() {
-        return ingame;
+        return stage == 2;
     }
 
-    public void setIngame(boolean ingame) {
-        if (this.ingame == ingame)
+    public int getStage() {
+        return stage;
+    }
+
+    public void setStage(int stage) {
+        if (this.stage == stage)
             return;
-        this.ingame = ingame;
+        this.stage = stage;
         populateSigns();
-        if (ingame) {
-            updateLeaderboard();
-            updateScoreboard();
-            timer = timeLimit;
-            OITG.instance.getArenaManager().startTimers();
-            return;
+        switch(stage) {
+            default:
+            case 0:
+                timer = -1;
+                if (!OITG.instance.getArenaManager().areAnyArenasIngame())
+                    OITG.instance.getArenaManager().stopTimers();
+                break;
+            case 1:
+                timer = OITG.instance.getConfig().getInt("pregame-countdown");
+                if (timer < 1)
+                    timer = 1;
+                OITG.instance.getArenaManager().startTimers();
+                break;
+            case 2:
+                timer = timeLimit;
+                OITG.instance.getArenaManager().startTimers();
+                updateLeaderboard();
+                updateScoreboard();
+                break;
         }
-        timer = -1;
-        if (!OITG.instance.getArenaManager().areAnyArenasIngame())
-            OITG.instance.getArenaManager().stopTimers();
     }
 
     public int getTimerRemaining() {
         return timer;
     }
 
-    public String getTimeRemainingFormatted() {
+    public String getTimerFormatted() {
         return timer == -1 ? "N/A" : String.format("%02d:%02d", timer / 60, timer % 60);
     }
 
-    public void setTimeRemaining(int seconds) {
-        if (!ingame)
+    public void setTimer(int seconds) {
+        if (stage == 0)
             return;
-        timer = seconds < 1 ? 1 : seconds; // Add a one second delay if < 1 to ensure that endgame handling occurs
+        timer = seconds < 1 ? 1 : seconds; // Add a one second delay if < 1 to ensure that start- and end-game handling occurs
     }
 
     public void decrementTimer() {
-        if (!ingame || timer == -1)
+        if (stage == 0 || timer == -1)
             return;
         switch(--timer) {
             case 0:
-                endgame();
+                if (stage == 2)
+                    end();
+                else
+                    start();
                 break;
             case 10:
             case 30:
-                broadcast(ChatColor.RED + "The round ends in " + ChatColor.LIGHT_PURPLE + timer + " seconds" + ChatColor.GRAY + "!");
+                broadcast(ChatColor.RED + "The round " + (stage == 1 ? "starts" : "ends") + " in " + ChatColor.LIGHT_PURPLE +
+                        timer + " seconds" + ChatColor.GRAY + "!");
                 break;
             default:
                 if (timer % 60 == 0)
-                    broadcast(ChatColor.GRAY + "The round ends in " + ChatColor.LIGHT_PURPLE + (timer == 60 ? "1 minute" :
+                    broadcast(ChatColor.GRAY + "The round " + (stage == 1 ? "starts" : "ends") + " in " + ChatColor.LIGHT_PURPLE + (timer == 60 ? "1 minute" :
                             timer / 60 + " minutes") + ChatColor.GRAY + "!");
                 break;
         }
@@ -397,7 +415,7 @@ public class Arena implements Serializable {
         if (OITG.saveOnEdit)
             save();
     }
-    
+
     public void clearSignLocations() {
         wipeSigns();
         signLocations.clear();
@@ -491,26 +509,35 @@ public class Arena implements Serializable {
         populateSigns();
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         if (broadcast)
-            broadcast(player.getName() + " has fled the arena!");
-        if (ingame) {
-            if (playerData.size() == 1) {
-                endgame();
-                return true;
-            }
-            updateLeaderboard();
-            Iterator<Pair<Player, HLComparablePair<Integer, Integer>>> iter = leaderboard.iterator();
-            for (int i = 0; i < 10; i++) {
-                if (!iter.hasNext())
-                    break;
-                if (iter.next().getX().equals(player)) { // Player was in the top 10 and thus was listed on the scoreboard
-                    updateScoreboard();
-                    break;
+            broadcast(player.getName() + " has " + (stage == 2 ? "fled" : "left") + " the arena!");
+        switch(stage) {
+            case 0:
+                if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
+                    OITG.instance.getGameListener().setRegistered(false);
+                break;
+            case 1:
+                if (playerData.size() <= 1) {
+                    broadcast(ChatColor.RED + "There must be at least two players to start the round. Cancelling the countdown...");
+                    setStage(0);
                 }
-            }
-            return true;
+                break;
+            case 2:
+                if (playerData.size() == 1) {
+                    end();
+                    return true;
+                }
+                updateLeaderboard();
+                Iterator<Pair<Player, HLComparablePair<Integer, Integer>>> iter = leaderboard.iterator();
+                for (int i = 0; i < 10; i++) {
+                    if (!iter.hasNext())
+                        break;
+                    if (iter.next().getX().equals(player)) { // Player was in the top 10 and thus was listed on the scoreboard
+                        updateScoreboard();
+                        break;
+                    }
+                }
+                break;
         }
-        if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
-            OITG.instance.getGameListener().setRegistered(false);
         return true;
     }
 
@@ -519,7 +546,7 @@ public class Arena implements Serializable {
         for (Player player : playerData.keySet())
             player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
         playerData.clear();
-        setIngame(false);
+        setStage(0);
         populateSigns();
         updateLeaderboard();
         if (OITG.instance.getArenaManager().areAllArenasEmpty())
@@ -543,7 +570,7 @@ public class Arena implements Serializable {
         if (!playerData.setX(player, kills))
             return false;
         if (killLimit != -1 && kills >= killLimit) {
-            endgame();
+            end();
             return true;
         }
         updateLeaderboard();
@@ -636,8 +663,14 @@ public class Arena implements Serializable {
     public String getState() {
         if (closed)
             return ChatColor.DARK_RED + "Closed";
-        if (ingame)
-            return ChatColor.RED + "In game";
-        return ChatColor.GREEN + "Waiting";
+        switch(stage) {
+            default:
+            case 0:
+                return ChatColor.GREEN + "Waiting";
+            case 1:
+                return ChatColor.GOLD + "Starting";
+            case 2:
+                return ChatColor.RED + "In game";
+        }
     }
 }
