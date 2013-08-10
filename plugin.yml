@@ -91,6 +91,9 @@ permissions:
     oneinthegun.reload:
         description: Permission to reload the config
         default: op
+    oneinthegun.search:
+        description: Permission to lookup the arena a player is currently in
+        default: true
     oneinthegun.setgloballobby:
         description: Permission to place the global lobby
         default: op

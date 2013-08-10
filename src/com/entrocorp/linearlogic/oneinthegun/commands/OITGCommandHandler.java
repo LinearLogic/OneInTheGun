@@ -57,6 +57,8 @@ public class OITGCommandHandler implements CommandExecutor {
             cmd = new CommandRename(sender, newArgs);
         else if (label.equals("save"))
             cmd = new CommandSave(sender, newArgs);
+        else if (label.equals("search"))
+            cmd = new CommandSearch(sender, newArgs);
         else if (label.equals("setgloballobby"))
             cmd = new CommandSetGlobalLobby(sender, newArgs);
         else if (label.equals("settings"))
