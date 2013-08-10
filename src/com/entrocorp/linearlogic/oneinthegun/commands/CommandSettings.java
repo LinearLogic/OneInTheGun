@@ -18,8 +18,29 @@ public class CommandSettings extends OITGArenaCommand {
             return;
         }
         String setting = args[1].toLowerCase();
-        if (setting.contains("limit") && arena.getPlayerCount() != 0) {
+        if ((setting.contains("limit") || setting.equals("start-count")) && arena.getPlayerCount() != 0) {
             sender.sendMessage(OITG.prefix + ChatColor.RED + "The arena must be empty.");
+            return;
+        }
+
+        if (setting.equals("start-count")) {
+            if (!checkPermission("oneinthegun.arena.settings.startcount"))
+                return;
+            int limit = 0;
+            try {
+                limit = Integer.parseInt(args[2]);
+            } catch (NumberFormatException e) { }
+            if (limit < 2 && limit != -1) {
+                sender.sendMessage(OITG.prefix + "The start count must be a number greater than 1.");
+                return;
+            }
+            if (limit > arena.getPlayerLimit()) {
+                sender.sendMessage(OITG.prefix + "The start count cannot be greater than the arena's player limit (" +
+                        ChatColor.LIGHT_PURPLE + arena.getPlayerLimit() + ChatColor.GRAY + ").");
+                return;
+            }
+            arena.setPlayerLimit(limit);
+            sender.sendMessage(OITG.prefix + "Updated the player limit for arena " + arena.toString());
             return;
         }
 
@@ -32,6 +53,11 @@ public class CommandSettings extends OITGArenaCommand {
             } catch (NumberFormatException e) { }
             if (limit < 2 && limit != -1) {
                 sender.sendMessage(OITG.prefix + "The player limit must be a number greater than 1 (or equal to -1 to for no limit).");
+                return;
+            }
+            if (limit < arena.getStartCount()) {
+                sender.sendMessage(OITG.prefix + "The player limit cannot be less than the arena's start count (" +
+                        ChatColor.LIGHT_PURPLE + arena.getStartCount() + ChatColor.GRAY + ").");
                 return;
             }
             arena.setPlayerLimit(limit);
@@ -173,8 +199,9 @@ public class CommandSettings extends OITGArenaCommand {
             return;
         }
 
-        sender.sendMessage(OITG.prefix + ChatColor.RED + "Invalid setting name. Supported settings: " + ChatColor.GRAY + "player-limit, " +
-                "time-limit, kill-limit, block-place, block-break, health-regen, hunger, item-drop, item-pickup, mob-combat.");
+        sender.sendMessage(OITG.prefix + ChatColor.RED + "Invalid setting name. Supported settings: " + ChatColor.GRAY +
+                "start-count, player-limit, time-limit, kill-limit, block-place, block-break, health-regen, hunger, " +
+                "tem-drop, item-pickup, mob-combat.");
     }
 
     private boolean checkPermission(String permission) {
