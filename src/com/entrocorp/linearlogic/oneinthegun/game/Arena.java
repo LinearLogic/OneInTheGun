@@ -43,6 +43,7 @@ public class Arena implements Serializable {
     private boolean allowItemPickup;
     private boolean allowMobCombat;
 
+    private int startCount;
     private int playerLimit;
     private int timeLimit;
     private int killLimit;
@@ -67,8 +68,10 @@ public class Arena implements Serializable {
     }
 
     public void init() {
+        if (startCount < 2)
+            startCount = 10;
         if (playerLimit < 2 && playerLimit != -1)
-            playerLimit = 10;
+            playerLimit = 20;
         if (timeLimit < 10 && timeLimit != -1)
             timeLimit = 300;
         if (killLimit < 1 && killLimit != -1)
@@ -313,6 +316,19 @@ public class Arena implements Serializable {
         }
     }
 
+    public int getStartCount() {
+        return startCount;
+    }
+
+    public void setStartCount(int count) {
+        if (startCount == count)
+            return;
+        startCount = count;
+        if (OITG.saveOnEdit)
+            save();
+        populateSigns();
+    }
+
     public int getPlayerLimit() {
         return playerLimit;
     }
@@ -498,6 +514,11 @@ public class Arena implements Serializable {
         playerData.put(player, 0, 0);
         populateSigns();
         OITG.instance.getGameListener().setRegistered(true);
+        if (stage == 0 && playerData.size() == startCount) {
+            broadcast(player.getName() + " has joined the arena. The round will start shortly.");
+            setStage(1);
+            return true;
+        }
         broadcast(player.getName() + " has joined the arena.");
         return true;
     }
