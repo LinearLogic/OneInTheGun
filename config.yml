@@ -1,6 +1,8 @@
 use-abbreviated-prefix: false
-pregame-countdown: 60
 save-arena-on-edit: false
+timers:
+    pregame-countdown: 60
+    spawn-shield: 3
 join-to-lobby: true
 global-lobby:
     x: 100

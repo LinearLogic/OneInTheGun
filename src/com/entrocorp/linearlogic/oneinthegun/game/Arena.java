@@ -126,6 +126,12 @@ public class Arena implements Serializable {
             armPlayer(player);
             player.teleport(spawns[++index % spawns.length]);
         }
+        setAllPlayersInGodmode(true);
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                setAllPlayersInGodmode(false);
+            }
+        }, OITG.instance.getConfig().getInt("timers.spawn-shield") * 20L);
         setStage(2);
         broadcast("" + ChatColor.RED + ChatColor.BOLD + "Game on!");
     }
@@ -267,7 +273,7 @@ public class Arena implements Serializable {
                     OITG.instance.getArenaManager().stopTimers();
                 break;
             case 1:
-                timer = OITG.instance.getConfig().getInt("pregame-countdown");
+                timer = OITG.instance.getConfig().getInt("timers.pregame-countdown");
                 if (timer < 1)
                     timer = 1;
                 OITG.instance.getArenaManager().startTimers();
@@ -631,12 +637,18 @@ public class Arena implements Serializable {
         return setDeaths(player, getDeaths(player) + 1);
     }
 
-    public void killPlayer(Player player) {
+    public void killPlayer(final Player player) {
         if (!incrementDeaths(player))
             return;
         player.setHealth(player.getMaxHealth());
         player.teleport(getRandomSpawn());
         armPlayer(player);
+        godmodePlayers.add(player);
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                godmodePlayers.remove(player);
+            }
+        }, OITG.instance.getConfig().getInt("timers.spawn-shield") * 20L);
     }
 
     public double getKDR(Player player) {
