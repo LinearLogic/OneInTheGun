@@ -34,6 +34,9 @@ permissions:
     oneinthegun.arena.list:
         description: Permission to list arenas
         default: true
+    oneinthegun.arena.rename:
+        description: Permission to rename arenas
+        default: op
     oneinthegun.arena.save:
         description: Permission to save an arena (used if the 'save-arena-on-edit' node is set to 'false' in the config)
         default: op

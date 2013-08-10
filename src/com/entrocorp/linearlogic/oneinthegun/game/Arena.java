@@ -98,7 +98,8 @@ public class Arena implements Serializable {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(arenaDir, name.toLowerCase() + ".arena")));
             oos.writeObject(this);
             oos.close();
-            OITG.instance.logInfo("Saved arena \"" + name + "\"");
+            if (logSuccess)
+                OITG.instance.logInfo("Saved arena \"" + name + "\"");
             return true;
         } catch (IOException e) {
             OITG.instance.logSevere("Failed to save arena \"" + name + "\"");
@@ -147,11 +148,14 @@ public class Arena implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public boolean setName(String name) {
+        if (this.name.equalsIgnoreCase(name))
+            return false;
         delete();
-        save(false);
+        this.name = name;
+        save(true);
         populateSigns();
+        return true;
     }
 
     public boolean isClosed() {
