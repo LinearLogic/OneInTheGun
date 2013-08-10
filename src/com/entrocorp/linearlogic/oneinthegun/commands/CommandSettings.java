@@ -34,7 +34,7 @@ public class CommandSettings extends OITGArenaCommand {
                 sender.sendMessage(OITG.prefix + "The start count must be a number greater than 1.");
                 return;
             }
-            if (count > arena.getPlayerLimit()) {
+            if (count > arena.getPlayerLimit() && arena.getPlayerLimit() != -1) {
                 sender.sendMessage(OITG.prefix + "The start count cannot be greater than the arena's player limit (" +
                         ChatColor.LIGHT_PURPLE + arena.getPlayerLimit() + ChatColor.GRAY + ").");
                 return;
@@ -55,7 +55,7 @@ public class CommandSettings extends OITGArenaCommand {
                 sender.sendMessage(OITG.prefix + "The player limit must be a number greater than 1 (or equal to -1 to for no limit).");
                 return;
             }
-            if (limit < arena.getStartCount()) {
+            if (limit < arena.getStartCount() && limit != -1) {
                 sender.sendMessage(OITG.prefix + "The player limit cannot be less than the arena's start count (" +
                         ChatColor.LIGHT_PURPLE + arena.getStartCount() + ChatColor.GRAY + ").");
                 return;

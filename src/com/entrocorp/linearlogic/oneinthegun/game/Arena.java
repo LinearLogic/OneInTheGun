@@ -279,12 +279,12 @@ public class Arena implements Serializable {
         }
     }
 
-    public int getTimerRemaining() {
+    public int getTimer() {
         return timer;
     }
 
     public String getTimerFormatted() {
-        return timer == -1 ? "N/A" : String.format("%02d:%02d", timer / 60, timer % 60);
+        return timer == -1 ? "infinity" : String.format("%02d:%02d", timer / 60, timer % 60);
     }
 
     public void setTimer(int seconds) {
@@ -452,8 +452,8 @@ public class Arena implements Serializable {
     }
 
     public void populateSigns() {
-        String[] lines = {name, getState(), playerData.size() + "/" + playerLimit, playerData.size() < startCount ?
-            startCount - playerData.size() + " to start" : null};
+        String[] lines = {name, getState(), playerData.size() + "/" + (playerLimit == -1 ? "infinity" : playerLimit),
+                playerData.size() < startCount ? startCount - playerData.size() + " to start" : null};
         for (SerializableLocation sloc : signLocations) {
             Block block = sloc.asBukkitLocation().getBlock();
             if (!block.getType().equals(Material.SIGN_POST) && !block.getType().equals(Material.WALL_SIGN))
@@ -651,8 +651,8 @@ public class Arena implements Serializable {
     public void armPlayer(Player player) {
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[4]);
-        player.getInventory().setItem(0, new ItemStack(Material.BOW));
-        player.getInventory().setItem(1, new ItemStack(Material.WOOD_SWORD));
+        player.getInventory().addItem(new ItemStack(Material.BOW));
+        player.getInventory().addItem(new ItemStack(Material.WOOD_SWORD));
         player.getInventory().setItem(8, new ItemStack(Material.ARROW));
     }
 
@@ -689,7 +689,7 @@ public class Arena implements Serializable {
             case 0:
                 return ChatColor.GREEN + "Waiting";
             case 1:
-                return ChatColor.GOLD + "Starting";
+                return ChatColor.YELLOW + "Starting";
             case 2:
                 return ChatColor.RED + "In game";
         }

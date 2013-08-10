@@ -22,7 +22,7 @@ public class CommandJoin extends OITGArenaCommand {
             player.sendMessage(OITG.prefix + ChatColor.RED + "That arena is closed, choose another.");
             return;
         }
-        if (arena.getPlayerCount() >= arena.getPlayerLimit()) {
+        if (arena.getPlayerCount() >= arena.getPlayerLimit() && arena.getPlayerLimit() != -1) {
             player.sendMessage(OITG.prefix + ChatColor.RED + "That arena is full, choose another.");
             return;
         }
