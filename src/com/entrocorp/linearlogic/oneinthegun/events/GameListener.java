@@ -1,6 +1,7 @@
 package com.entrocorp.linearlogic.oneinthegun.events;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Flying;
@@ -16,11 +17,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
 import com.entrocorp.linearlogic.oneinthegun.game.Arena;
@@ -90,6 +93,7 @@ public class GameListener implements Listener {
                             return;
                         defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was sniped by " +
                                 ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
+                        attacker.getInventory().addItem(new ItemStack(Material.ARROW, 2));
                         defenderArena.killPlayer(defender);
                         defenderArena.incrementKills(attacker);
                         return;
@@ -193,6 +197,16 @@ public class GameListener implements Listener {
         if (arena == null || arena.isItemPickupAllowed())
             return;
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent event) {
+        if (!(event.getEntity() instanceof Arrow))
+            return;
+        if (!(event.getEntity().getShooter() instanceof Player))
+            return;
+        if (OITG.instance.getArenaManager().getArena((Player) event.getEntity().getShooter()) != null)
+            event.getEntity().remove();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
