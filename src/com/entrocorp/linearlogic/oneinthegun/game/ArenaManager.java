@@ -89,7 +89,16 @@ public class ArenaManager {
         int counter = 0;
         Arena[] matches = new Arena[arenas.size()];
         for (Arena arena : arenas)
-            if (!arena.isIngame())
+            if (arena.isWaiting())
+                matches[counter++] = arena;
+        return Arrays.copyOf(matches, counter);
+    }
+
+    public Arena[] getStartingArenas() {
+        int counter = 0;
+        Arena[] matches = new Arena[arenas.size()];
+        for (Arena arena : arenas)
+            if (arena.isStarting())
                 matches[counter++] = arena;
         return Arrays.copyOf(matches, counter);
     }

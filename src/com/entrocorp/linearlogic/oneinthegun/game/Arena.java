@@ -256,6 +256,14 @@ public class Arena implements Serializable {
             save(false);
     }
 
+    public boolean isWaiting() {
+        return stage == 0;
+    }
+
+    public boolean isStarting() {
+        return stage == 1;
+    }
+
     public boolean isIngame() {
         return stage == 2;
     }
