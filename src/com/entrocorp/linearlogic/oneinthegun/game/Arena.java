@@ -548,8 +548,9 @@ public class Arena implements Serializable {
             return false;
         godmodePlayers.remove(player);
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
-        populateSigns();
+        player.getInventory().clear();
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
+        populateSigns();
         if (broadcast)
             broadcast(player.getName() + " has " + (stage == 2 ? "fled" : "left") + " the arena!");
         switch(stage) {
@@ -585,8 +586,10 @@ public class Arena implements Serializable {
 
     public void clearPlayers() {
         closeScoreboard();
-        for (Player player : playerData.keySet())
+        for (Player player : playerData.keySet()) {
+            player.getInventory().clear();
             player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
+        }
         playerData.clear();
         godmodePlayers.clear();
         setStage(0);
