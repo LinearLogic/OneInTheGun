@@ -39,6 +39,8 @@ public class OITGCommandHandler implements CommandExecutor {
             cmd = new CommandForceStart(sender, newArgs);
         else if (label.endsWith("forcestop") || label.equals("fstop"))
             cmd = new CommandForceStop(sender, newArgs);
+        else if (label.equals("help"))
+            cmd = new CommandHelp(sender, newArgs);
         else if (label.equals("info"))
             cmd = new CommandInfo(sender, newArgs);
         else if (label.equals("join"))
