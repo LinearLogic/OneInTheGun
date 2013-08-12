@@ -118,12 +118,4 @@ public class GeneralListener implements Listener {
             }
         }, 5L);
     }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
-        if (arena == null)
-            return;
-        arena.removePlayer(event.getPlayer(), true);
-    }
 }

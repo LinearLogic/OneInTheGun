@@ -22,6 +22,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -207,6 +208,14 @@ public class GameListener implements Listener {
             return;
         if (OITG.instance.getArenaManager().getArena((Player) event.getEntity().getShooter()) != null)
             event.getEntity().remove();
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Arena arena = OITG.instance.getArenaManager().getArena(event.getPlayer());
+        if (arena == null)
+            return;
+        arena.removePlayer(event.getPlayer(), true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
