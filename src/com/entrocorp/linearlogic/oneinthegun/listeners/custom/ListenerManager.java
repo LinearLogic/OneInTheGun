@@ -76,9 +76,14 @@ public class ListenerManager {
         });
     }
 
-    public void fireVictoryEvent(Player player) {
+    public void fireVictoryEvent(final Player player) {
         for (VictoryListener vl : victoryListeners)
             vl.onVictory(player);
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                OITG.instance.getServer().getPluginManager().callEvent(new VictoryEvent(player));
+            }
+        });
     }
 
     public KillstreakListener[] getKillstreakListeners() {
