@@ -60,7 +60,7 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (event.getMessage().toLowerCase().startsWith("/oitg"))
+        if (event.getMessage().toLowerCase().startsWith("/oitg") || event.getPlayer().hasPermission("oneinthegun.arena.allowcommands"))
             return;
         event.setCancelled(true);
         event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Only OITG commands are permitted in an arena.");

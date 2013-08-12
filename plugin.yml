@@ -7,6 +7,9 @@ commands:
         description: Root command
         usage: /oitg [args]
 permissions:
+    oneinthegun.arena.allowcommands:
+        description: Permission to run non-OITG commands whilst in an arena
+        default: op
     oneinthegun.arena.create:
         description: Permission to create arenas
         default: op
