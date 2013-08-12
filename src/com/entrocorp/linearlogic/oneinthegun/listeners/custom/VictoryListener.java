@@ -4,5 +4,5 @@ import org.bukkit.entity.Player;
 
 public interface VictoryListener {
 
-    public void onVictory(Player victor);
+    public void onVictory(Player player);
 }

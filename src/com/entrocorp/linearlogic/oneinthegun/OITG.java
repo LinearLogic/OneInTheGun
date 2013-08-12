@@ -9,6 +9,7 @@ import com.entrocorp.linearlogic.oneinthegun.commands.OITGCommandHandler;
 import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
 import com.entrocorp.linearlogic.oneinthegun.listeners.GameListener;
 import com.entrocorp.linearlogic.oneinthegun.listeners.GeneralListener;
+import com.entrocorp.linearlogic.oneinthegun.listeners.custom.ListenerManager;
 
 public class OITG extends JavaPlugin {
 
@@ -22,6 +23,7 @@ public class OITG extends JavaPlugin {
     public static int spawnShieldDuration;
 
     private ArenaManager am;
+    private ListenerManager lm;
     private OITGCommandHandler ch;
     private GameListener gameListener;
     private GeneralListener generalListener;
@@ -39,6 +41,7 @@ public class OITG extends JavaPlugin {
         logInfo("Registering listeners...");
         gameListener = new GameListener();
         generalListener = new GeneralListener();
+        lm = new ListenerManager();
         getServer().getPluginManager().registerEvents(generalListener, instance);
         logInfo("Loading arenas...");
         am.loadArenas();
@@ -51,6 +54,9 @@ public class OITG extends JavaPlugin {
         gameListener.setRegistered(false);
         HandlerList.unregisterAll(generalListener);
         generalListener = null;
+        lm.clearKillstreakListeners();
+        lm.clearVictoryListeners();
+        lm = null;
         logInfo("Saving the config...");
         saveConfig();
         logInfo("Saving arenas...");
@@ -78,6 +84,10 @@ public class OITG extends JavaPlugin {
 
     public ArenaManager getArenaManager() {
         return am;
+    }
+
+    public ListenerManager getListenerManager() {
+        return lm;
     }
 
     public GameListener getGameListener() {
