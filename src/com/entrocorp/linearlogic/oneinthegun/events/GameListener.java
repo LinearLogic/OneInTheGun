@@ -20,6 +20,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -55,6 +56,14 @@ public class GameListener implements Listener {
             event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Block placing is disabled in this arena.");
             return;
         }
+    }
+
+    @EventHandler
+    public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (event.getMessage().toLowerCase().startsWith("/oitg"))
+            return;
+        event.setCancelled(true);
+        event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Only OITG commands are permitted in an arena.");
     }
 
     @EventHandler
