@@ -1,4 +1,4 @@
-package com.entrocorp.linearlogic.oneinthegun.events;
+package com.entrocorp.linearlogic.oneinthegun.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

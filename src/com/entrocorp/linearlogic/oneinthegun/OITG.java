@@ -6,9 +6,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.entrocorp.linearlogic.oneinthegun.commands.OITGCommandHandler;
-import com.entrocorp.linearlogic.oneinthegun.events.GameListener;
-import com.entrocorp.linearlogic.oneinthegun.events.GeneralListener;
 import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
+import com.entrocorp.linearlogic.oneinthegun.listeners.GameListener;
+import com.entrocorp.linearlogic.oneinthegun.listeners.GeneralListener;
 
 public class OITG extends JavaPlugin {
 
