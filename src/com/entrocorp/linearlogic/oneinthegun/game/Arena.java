@@ -141,9 +141,10 @@ public class Arena implements Serializable {
     }
 
     private void end() {
-        OITG.instance.getServer().broadcastMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD +
-                leaderboard.iterator().next().getX().getName() + ChatColor.GRAY + " emerges victorious from arena " +
-                ChatColor.YELLOW + name + ChatColor.GRAY + "!");
+        Player victor = leaderboard.iterator().next().getX();
+        OITG.instance.getServer().broadcastMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD + victor.getName() +
+                ChatColor.GRAY + " emerges victorious from arena " + ChatColor.YELLOW + name + ChatColor.GRAY + "!");
+        OITG.instance.getListenerManager().fireVictoryEvent(victor);
         clearPlayers();
     }
 
@@ -638,10 +639,13 @@ public class Arena implements Serializable {
     }
 
     public boolean incrementKills(Player player) {
-        if (!setKills(player, getKills(player) + 1))
+        int kills = getKills(player);
+        if (!setKills(player, kills + 1))
             return false;
-        if (OITG.killstreaks)
+        if (OITG.killstreaks) {
             killstreaks.put(player, getCurrentKillStreak(player) + 1);
+            OITG.instance.getListenerManager().fireKillstreakChangeEvent(player, kills, kills + 1);
+        }
         return true;
     }
 
@@ -660,8 +664,11 @@ public class Arena implements Serializable {
     public boolean incrementDeaths(Player player) {
         if (!setDeaths(player, getDeaths(player) + 1))
             return false;
-        if (OITG.killstreaks)
+        if (OITG.killstreaks) {
+            int previousKills = killstreaks.get(player);
             killstreaks.put(player, 0);
+            OITG.instance.getListenerManager().fireKillstreakChangeEvent(player, previousKills, 0);
+        }
         return true;
     }
 
