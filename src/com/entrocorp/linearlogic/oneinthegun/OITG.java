@@ -42,6 +42,7 @@ public class OITG extends JavaPlugin {
         gameListener = new GameListener();
         generalListener = new GeneralListener();
         lm = new ListenerManager();
+        lm.loadListeners();
         getServer().getPluginManager().registerEvents(generalListener, instance);
         logInfo("Loading arenas...");
         am.loadArenas();
