@@ -643,7 +643,7 @@ public class Arena implements Serializable {
         if (!setKills(player, kills + 1))
             return false;
         if (OITG.killstreaks) {
-            killstreaks.put(player, getCurrentKillStreak(player) + 1);
+            killstreaks.put(player, getCurrentKillstreak(player) + 1);
             OITG.instance.getListenerManager().fireKillstreakChangeEvent(player, kills, kills + 1);
         }
         return true;
@@ -665,9 +665,11 @@ public class Arena implements Serializable {
         if (!setDeaths(player, getDeaths(player) + 1))
             return false;
         if (OITG.killstreaks) {
-            int previousKills = killstreaks.get(player);
-            killstreaks.put(player, 0);
-            OITG.instance.getListenerManager().fireKillstreakChangeEvent(player, previousKills, 0);
+            int previousKills = getCurrentKillstreak(player);
+            if (previousKills != 0) {
+                killstreaks.put(player, 0);
+                OITG.instance.getListenerManager().fireKillstreakChangeEvent(player, previousKills, 0);
+            }
         }
         return true;
     }
@@ -699,7 +701,7 @@ public class Arena implements Serializable {
         return true;
     }
 
-    public int getCurrentKillStreak(Player player) {
+    public int getCurrentKillstreak(Player player) {
         return killstreaks.containsKey(player) ? killstreaks.get(player) : 0;
     }
 
