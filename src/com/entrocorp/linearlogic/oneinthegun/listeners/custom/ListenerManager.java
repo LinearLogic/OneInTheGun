@@ -66,9 +66,14 @@ public class ListenerManager {
         }
     }
 
-    public void fireKillstreakChangeEvent(Player player, int oldStreak, int newStreak) {
+    public void fireKillstreakChangeEvent(final Player player, final int from, final int to) {
         for (KillstreakListener kl : killstreakListeners)
-            kl.onKillstreakChange(player, oldStreak, newStreak);
+            kl.onKillstreakChange(player, from, to);
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                OITG.instance.getServer().getPluginManager().callEvent(new KillstreakChangeEvent(player, from, to));
+            }
+        });
     }
 
     public void fireVictoryEvent(Player player) {
