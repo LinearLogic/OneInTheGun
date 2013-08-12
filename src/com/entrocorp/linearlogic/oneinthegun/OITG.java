@@ -16,6 +16,7 @@ public class OITG extends JavaPlugin {
 
     public static String prefix;
     public static boolean joinToLobby;
+    public static boolean killstreaks;
     public static boolean saveOnEdit;
     public static int pregameDuration;
     public static int spawnShieldDuration;
@@ -66,6 +67,7 @@ public class OITG extends JavaPlugin {
         prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + (getConfig().getBoolean("use-abbreviated-prefix") ? "OITG" : "One" +
                 ChatColor.DARK_GRAY + "InThe" + ChatColor.GOLD + "Gun") + ChatColor.GRAY + "] ";
         joinToLobby = getConfig().getBoolean("join-to-lobby");
+        killstreaks = getConfig().getBoolean("killstreaks");
         saveOnEdit = getConfig().getBoolean("save-arena-on-edit");
         pregameDuration = getConfig().getInt("timers.pregame-countdown");
         spawnShieldDuration = getConfig().getInt("timers.spawn-shield");

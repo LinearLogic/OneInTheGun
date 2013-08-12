@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
@@ -60,8 +61,9 @@ public class Arena implements Serializable {
     private transient int timer;
 
     private transient Set<Pair<Player, HLComparablePair<Integer, Integer>>> leaderboard;
-    private transient TriMap<Player, Integer, Integer> playerData;
     private transient Set<Player> godmodePlayers;
+    private transient HashMap<Player, Integer> killstreaks;
+    private transient TriMap<Player, Integer, Integer> playerData;
 
     public Arena(String name) {
         this.name = name;
@@ -84,6 +86,7 @@ public class Arena implements Serializable {
         playerData = new TriMap<Player, Integer, Integer>();
         leaderboard = playerData.sortedEntrySet();
         godmodePlayers = new HashSet<Player>();
+        killstreaks = new HashMap<Player, Integer>();
         board = OITG.instance.getServer().getScoreboardManager().getNewScoreboard();
         objective = board.registerNewObjective("kills", "dummy");
         objective.setDisplayName("" + ChatColor.DARK_RED + ChatColor.BOLD + "\u00AB Kills \u00BB");
@@ -547,6 +550,7 @@ public class Arena implements Serializable {
         if (playerData.remove(player) == null)
             return false;
         godmodePlayers.remove(player);
+        killstreaks.remove(player);
         player.setScoreboard(OITG.instance.getServer().getScoreboardManager().getNewScoreboard());
         player.getInventory().clear();
         player.teleport(OITG.instance.getArenaManager().getGlobalLobby());
@@ -592,6 +596,7 @@ public class Arena implements Serializable {
         }
         playerData.clear();
         godmodePlayers.clear();
+        killstreaks.clear();
         setStage(0);
         populateSigns();
         updateLeaderboard();
@@ -633,7 +638,11 @@ public class Arena implements Serializable {
     }
 
     public boolean incrementKills(Player player) {
-        return setKills(player, getKills(player) + 1);
+        if (!setKills(player, getKills(player) + 1))
+            return false;
+        if (OITG.killstreaks)
+            killstreaks.put(player, getCurrentKillStreak(player) + 1);
+        return true;
     }
 
     public int getDeaths(Player player) {
@@ -649,7 +658,11 @@ public class Arena implements Serializable {
     }
 
     public boolean incrementDeaths(Player player) {
-        return setDeaths(player, getDeaths(player) + 1);
+        if (!setDeaths(player, getDeaths(player) + 1))
+            return false;
+        if (OITG.killstreaks)
+            killstreaks.put(player, 0);
+        return true;
     }
 
     public void killPlayer(final Player player) {
@@ -679,6 +692,10 @@ public class Arena implements Serializable {
         return true;
     }
 
+    public int getCurrentKillStreak(Player player) {
+        return killstreaks.containsKey(player) ? killstreaks.get(player) : 0;
+    }
+
     public Player[] getPlayersInGodmode() {
         return godmodePlayers.toArray(new Player[godmodePlayers.size()]);
     }
@@ -706,7 +723,7 @@ public class Arena implements Serializable {
         player.getInventory().setArmorContents(new ItemStack[4]);
         player.getInventory().addItem(new ItemStack(Material.BOW));
         player.getInventory().addItem(new ItemStack(Material.WOOD_SWORD));
-        player.getInventory().setItem(8, new ItemStack(Material.ARROW));
+        player.getInventory().addItem(new ItemStack(Material.ARROW));
     }
 
     public void updateScoreboard() {
