@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -122,7 +124,9 @@ public class Arena implements Serializable {
             player.sendMessage(OITG.prefix + "<" + ChatColor.YELLOW + name + ChatColor.GRAY + "> " + message);
     }
 
-    public void start() {
+    public void startRound() {
+        if (closed || playerData.size() < 2 || stage == 2)
+            return;
         Location[] spawns = getSpawns();
         int index = -1;
         for (Player player : playerData.keySet()) {
@@ -140,7 +144,9 @@ public class Arena implements Serializable {
         broadcast("" + ChatColor.RED + ChatColor.BOLD + "Game on!");
     }
 
-    private void end() {
+    public void endRound() {
+        if (stage != 2)
+            return;
         Player victor = leaderboard.iterator().next().getX();
         OITG.instance.getServer().broadcastMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD + victor.getName() +
                 ChatColor.GRAY + " emerges victorious from arena " + ChatColor.YELLOW + name + ChatColor.GRAY + "!");
@@ -149,6 +155,10 @@ public class Arena implements Serializable {
     }
 
     public String toString() {
+        return name;
+    }
+
+    public String getName() {
         return name;
     }
 
@@ -279,28 +289,30 @@ public class Arena implements Serializable {
     public void setStage(int stage) {
         if (this.stage == stage)
             return;
-        this.stage = stage;
-        populateSigns();
         switch(stage) {
             default:
             case 0:
+                this.stage = 0;
                 timer = -1;
                 if (!OITG.instance.getArenaManager().areAnyArenasIngame())
                     OITG.instance.getArenaManager().stopTimers();
                 break;
             case 1:
+                this.stage = 1;
                 timer = OITG.pregameDuration;
                 if (timer < 1)
                     timer = 1;
                 OITG.instance.getArenaManager().startTimers();
                 break;
             case 2:
+                this.stage = 2;
                 timer = timeLimit;
                 OITG.instance.getArenaManager().startTimers();
                 updateLeaderboard();
                 updateScoreboard();
                 break;
         }
+        populateSigns();
     }
 
     public int getTimer() {
@@ -323,9 +335,9 @@ public class Arena implements Serializable {
         switch(--timer) {
             case 0:
                 if (stage == 2)
-                    end();
+                    endRound();
                 else
-                    start();
+                    startRound();
                 break;
             case 10:
             case 30:
@@ -375,6 +387,8 @@ public class Arena implements Serializable {
     }
 
     public void setTimeLimit(int limit) {
+        if (timeLimit == limit)
+            return;
         timeLimit = limit;
         if (OITG.saveOnEdit)
             save(false);
@@ -385,6 +399,8 @@ public class Arena implements Serializable {
     }
 
     public void setKillLimit(int limit) {
+        if (killLimit == limit)
+            return;
         killLimit = limit;
         if (OITG.saveOnEdit)
             save(false);
@@ -571,7 +587,7 @@ public class Arena implements Serializable {
                 break;
             case 2:
                 if (playerData.size() == 1) {
-                    end();
+                    endRound();
                     return true;
                 }
                 updateLeaderboard();
@@ -622,7 +638,7 @@ public class Arena implements Serializable {
         if (!playerData.setX(player, kills))
             return false;
         if (killLimit != -1 && kills >= killLimit) {
-            end();
+            endRound();
             return true;
         }
         updateLeaderboard();
@@ -703,6 +719,28 @@ public class Arena implements Serializable {
 
     public int getCurrentKillstreak(Player player) {
         return killstreaks.containsKey(player) ? killstreaks.get(player) : 0;
+    }
+
+    public Player getPlayerWithLongestKillstreak() {
+        Player longest = null;
+        int streak = 0;
+        for (Entry<Player, Integer> entry : killstreaks.entrySet()) {
+            if (entry.getValue() >= streak) {
+                longest = entry.getKey();
+                streak = entry.getValue();
+            }
+        }
+        return longest;
+    }
+
+    public Player[] getPlayersWithKillstreak(int streak) {
+        if (streak < 0)
+            return new Player[0];
+        List<Player> players = new ArrayList<Player>();
+        for (Entry<Player, Integer> entry : killstreaks.entrySet())
+            if (entry.getValue() == streak)
+                players.add(entry.getKey());
+        return players.toArray(new Player[players.size()]);
     }
 
     public Player[] getPlayersInGodmode() {

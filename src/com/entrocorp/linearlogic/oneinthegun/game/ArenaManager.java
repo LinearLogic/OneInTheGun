@@ -19,22 +19,29 @@ public class ArenaManager {
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
     private Location globalLobby;
 
+    public void loadArena(File arenaFile) {
+        if (!arenaFile.exists()) {
+            OITG.instance.logSevere("Attempted to load a persisted arena from a nonexistent file: " + arenaFile.getName());
+            return;
+        }
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arenaFile));
+            Arena arena = (Arena) ois.readObject();
+            arena.init();
+            arenas.add(arena);
+            ois.close();
+            OITG.instance.logInfo("Loaded arena \"" + arena.toString() + "\"");
+        } catch (Exception e) {
+            OITG.instance.logSevere("Failed to load an arena from the following file: " + arenaFile.getName());
+            e.printStackTrace();
+        }
+    }
+
     public void loadArenas() {
         File arenaDir = new File(OITG.instance.getDataFolder() + File.separator + "arenas");
         arenaDir.mkdirs();
         for (File arenaFile : arenaDir.listFiles()) {
-            try {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arenaFile));
-                Arena arena = (Arena) ois.readObject();
-                arena.init();
-                arenas.add(arena);
-                ois.close();
-                OITG.instance.logInfo("Loaded arena \"" + arena.toString() + "\"");
-            } catch (Exception e) {
-                OITG.instance.logSevere("Failed to load an arena from the following file: " + arenaFile.getName());
-                e.printStackTrace();
-                continue;
-            }
+            loadArena(arenaFile);
         }
     }
 
