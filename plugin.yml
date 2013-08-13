@@ -91,6 +91,9 @@ permissions:
     oneinthegun.arena.toggleclosed:
         description: Permission to open and close arenas
         default: op
+    oneinthegun.loadlisteners:
+        description: Permission to reload custom listeners
+        default: op
     oneinthegun.reload:
         description: Permission to reload the config
         default: op

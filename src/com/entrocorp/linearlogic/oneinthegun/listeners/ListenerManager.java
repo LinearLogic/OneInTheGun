@@ -29,7 +29,11 @@ public class ListenerManager {
         OITG.instance.getServer().getPluginManager().registerEvents(generalListener, OITG.instance);
         loadCustomListeners();
     }
-    public void loadCustomListeners() {
+
+    public boolean loadCustomListeners() {
+        killstreakListeners.clear();
+        victoryListeners.clear();
+        boolean errors = false;
         File listenerDir = new File(OITG.instance.getDataFolder() + File.separator + "listeners");
         listenerDir.mkdirs();
         ClassLoader cl;
@@ -37,7 +41,7 @@ public class ListenerManager {
             cl = new URLClassLoader(new URL[] {listenerDir.toURI().toURL()}, KillstreakListener.class.getClassLoader());
         } catch (MalformedURLException e) {
             OITG.instance.logSevere("Error while loading custom listeners: failed to resolve URL for class loader.");
-            return;
+            return false;
         }
         for (File file : listenerDir.listFiles()) {
             if (!file.getName().endsWith(".class"))
@@ -48,6 +52,7 @@ public class ListenerManager {
             try {
                 clazz = cl.loadClass(fileName);
             } catch (ClassNotFoundException e) {
+                errors = true;
                 OITG.instance.logWarning("Failed to load custom listener \"" + fileName + "\".");
                 e.printStackTrace();
                 continue;
@@ -60,6 +65,7 @@ public class ListenerManager {
                 e.printStackTrace();
                 continue;
             } catch (IllegalAccessException e) {
+                errors = true;
                 OITG.instance.logWarning("Failed to load custom listener \"" + fileName + "\".");
                 e.printStackTrace();
                 continue;
@@ -76,7 +82,9 @@ public class ListenerManager {
             }
             OITG.instance.logWarning("Failed to load custom listener \"" + fileName + "\" - class does not " +
                     "implement KillstreakListener or VictoryListener.");
+            errors = true;
         }
+        return !errors;
     }
 
     public void fireKillstreakChangeEvent(final Player player, final int from, final int to) {

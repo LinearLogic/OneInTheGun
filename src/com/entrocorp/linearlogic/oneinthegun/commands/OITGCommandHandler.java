@@ -51,6 +51,8 @@ public class OITGCommandHandler implements CommandExecutor {
             cmd = new CommandLeaderboard(sender, newArgs);
         else if (label.equals("leave"))
             cmd = new CommandLeave(sender, newArgs);
+        else if (label.equals("loadlisteners"))
+            cmd = new CommandLoadListeners(sender, args);
         else if (label.equals("open"))
             cmd = new CommandOpen(sender, newArgs);
         else if (label.equals("reload"))
