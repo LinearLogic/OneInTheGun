@@ -8,7 +8,7 @@ import com.entrocorp.linearlogic.oneinthegun.OITG;
 public class CommandHelp extends OITGCommand {
 
     private static String[] commands = {"addspawn <arena>", "arenas [state]", "clearspawns <arena>", "close <arena>",
-        "create <name>", "delete <arena>", "fstart <arena> [delay]", "fstop <arena> <delay", "help [page number]",
+        "create <name>", "delete <arena>", "fstart <arena> [delay]", "fstop <arena> [delay]", "help [page number]",
         "info <arena>", "join <arena>", "kick <arena> <player/all>", "leaderboard <arena> [page number]", "leave",
         "open <arena>", "reload", "rename <arena> <name>", "save <arena>", "search <username>", "setgloballobby",
         "setlobby <arena>", "settings <arena> <setting> <value>", "version"};

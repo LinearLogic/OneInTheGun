@@ -537,7 +537,7 @@ public class Arena implements Serializable {
             return false;
         playerData.put(player, 0, 0);
         populateSigns();
-        OITG.instance.getGameListener().setRegistered(true);
+        OITG.instance.getListenerManager().getGameListener().setRegistered(true);
         if (stage == 0 && playerData.size() == startCount) {
             broadcast(player.getName() + " has joined the arena. The round will start shortly.");
             setStage(1);
@@ -561,7 +561,7 @@ public class Arena implements Serializable {
         switch(stage) {
             case 0:
                 if (playerData.size() == 0 && OITG.instance.getArenaManager().areAllArenasEmpty())
-                    OITG.instance.getGameListener().setRegistered(false);
+                    OITG.instance.getListenerManager().getGameListener().setRegistered(false);
                 break;
             case 1:
                 if (playerData.size() <= 1) {
@@ -602,7 +602,7 @@ public class Arena implements Serializable {
         populateSigns();
         updateLeaderboard();
         if (OITG.instance.getArenaManager().areAllArenasEmpty())
-            OITG.instance.getGameListener().setRegistered(false);
+            OITG.instance.getListenerManager().getGameListener().setRegistered(false);
     }
 
     public Set<Pair<Player, HLComparablePair<Integer, Integer>>> getLeaderboard() {

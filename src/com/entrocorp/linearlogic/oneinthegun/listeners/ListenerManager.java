@@ -1,4 +1,4 @@
-package com.entrocorp.linearlogic.oneinthegun.listeners.custom;
+package com.entrocorp.linearlogic.oneinthegun.listeners;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -10,13 +10,26 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import com.entrocorp.linearlogic.oneinthegun.OITG;
+import com.entrocorp.linearlogic.oneinthegun.listeners.custom.KillstreakChangeEvent;
+import com.entrocorp.linearlogic.oneinthegun.listeners.custom.KillstreakListener;
+import com.entrocorp.linearlogic.oneinthegun.listeners.custom.VictoryEvent;
+import com.entrocorp.linearlogic.oneinthegun.listeners.custom.VictoryListener;
 
 public class ListenerManager {
+
+    private GameListener gameListener;
+    private GeneralListener generalListener;
 
     private List<KillstreakListener> killstreakListeners = new ArrayList<KillstreakListener>();
     private List<VictoryListener> victoryListeners = new ArrayList<VictoryListener>();
 
     public void loadListeners() {
+        gameListener = new GameListener();
+        generalListener = new GeneralListener();
+        OITG.instance.getServer().getPluginManager().registerEvents(generalListener, OITG.instance);
+        loadCustomListeners();
+    }
+    public void loadCustomListeners() {
         File listenerDir = new File(OITG.instance.getDataFolder() + File.separator + "listeners");
         listenerDir.mkdirs();
         ClassLoader cl;
@@ -84,6 +97,14 @@ public class ListenerManager {
                 OITG.instance.getServer().getPluginManager().callEvent(new VictoryEvent(player));
             }
         });
+    }
+
+    public GameListener getGameListener() {
+        return gameListener;
+    }
+
+    public GeneralListener getGeneralListener() {
+        return generalListener;
     }
 
     public KillstreakListener[] getKillstreakListeners() {

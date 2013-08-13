@@ -7,9 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.entrocorp.linearlogic.oneinthegun.commands.OITGCommandHandler;
 import com.entrocorp.linearlogic.oneinthegun.game.ArenaManager;
-import com.entrocorp.linearlogic.oneinthegun.listeners.GameListener;
-import com.entrocorp.linearlogic.oneinthegun.listeners.GeneralListener;
-import com.entrocorp.linearlogic.oneinthegun.listeners.custom.ListenerManager;
+import com.entrocorp.linearlogic.oneinthegun.listeners.ListenerManager;
 
 public class OITG extends JavaPlugin {
 
@@ -25,8 +23,6 @@ public class OITG extends JavaPlugin {
     private ArenaManager am;
     private ListenerManager lm;
     private OITGCommandHandler ch;
-    private GameListener gameListener;
-    private GeneralListener generalListener;
 
     @Override
     public void onEnable() {
@@ -39,11 +35,8 @@ public class OITG extends JavaPlugin {
         ch = new OITGCommandHandler();
         getCommand("oitg").setExecutor(ch);
         logInfo("Registering listeners...");
-        gameListener = new GameListener();
-        generalListener = new GeneralListener();
         lm = new ListenerManager();
         lm.loadListeners();
-        getServer().getPluginManager().registerEvents(generalListener, instance);
         logInfo("Loading arenas...");
         am.loadArenas();
         logInfo("Successfully enabled. Game on!");
@@ -52,17 +45,15 @@ public class OITG extends JavaPlugin {
     @Override
     public void onDisable() {
         ch = null;
-        gameListener.setRegistered(false);
-        HandlerList.unregisterAll(generalListener);
-        generalListener = null;
+        lm.getGameListener().setRegistered(false);
+        HandlerList.unregisterAll(lm.getGeneralListener());
         lm.clearKillstreakListeners();
         lm.clearVictoryListeners();
-        lm = null;
         logInfo("Saving the config...");
         saveConfig();
         logInfo("Saving arenas...");
         am.shutdown();
-        gameListener = null;
+        lm = null;
         am = null;
         logInfo("Successfully disabled. Game over!");
         instance = null;
@@ -89,14 +80,6 @@ public class OITG extends JavaPlugin {
 
     public ListenerManager getListenerManager() {
         return lm;
-    }
-
-    public GameListener getGameListener() {
-        return gameListener;
-    }
-
-    public GeneralListener getGeneralListener() {
-        return generalListener;
     }
 
     public void logInfo(String msg) {
