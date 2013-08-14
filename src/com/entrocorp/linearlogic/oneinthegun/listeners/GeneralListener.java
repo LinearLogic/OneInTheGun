@@ -90,17 +90,18 @@ public class GeneralListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        Arena arena = OITG.instance.getArenaManager().getArena(event.getLine(1));
+        final Arena arena = OITG.instance.getArenaManager().getArena(event.getLine(1));
         if (arena == null) {
             event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "The sign contains an invalid arena name!");
             event.setCancelled(true);
             return;
         }
-        event.setLine(0, arena.toString());
-        event.setLine(1, null);
-        event.setLine(2, arena.getState());
-        event.setLine(3, arena.getPlayerCount() + "/" + arena.getPlayerLimit());
-        arena.addSignLocation(event.getBlock().getLocation());
+        final Location signLoc = event.getBlock().getLocation();
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                arena.addSignLocation(signLoc);
+            }
+        });
         event.getPlayer().sendMessage(OITG.prefix + "Created a sign for arena: " + arena.toString());
     }
 

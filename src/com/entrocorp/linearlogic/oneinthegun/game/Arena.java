@@ -485,9 +485,9 @@ public class Arena implements Serializable {
             return false;
         Sign sign = (Sign) block.getState();
         sign.setLine(0, name);
-        sign.setLine(1, null);
-        sign.setLine(2, getState());
-        sign.setLine(3, playerData.size() + "/" + playerLimit);
+        sign.setLine(1, getState());
+        sign.setLine(2, playerData.size() + "/" + (playerLimit == -1 ? "infinity" : playerLimit));
+        sign.setLine(3, playerData.size() < startCount ? startCount - playerData.size() + " to start" : null);
         return sign.update();
     }
 
