@@ -109,11 +109,14 @@ public class GeneralListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         if (!OITG.joinToLobby)
             return;
-        final Player joined = event.getPlayer();
+        final String joinedName = event.getPlayer().getName();
+        final Location globby = OITG.instance.getArenaManager().getGlobalLobby();
+        if (globby == null)
+            return;
         OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
             public void run() {
-                Location globby = OITG.instance.getArenaManager().getGlobalLobby();
-                if (globby != null)
+                Player joined = OITG.instance.getServer().getPlayerExact(joinedName);
+                if (joined != null)
                     joined.teleport(globby);
             }
         }, 5L);
