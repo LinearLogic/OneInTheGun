@@ -60,6 +60,8 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (OITG.instance.getArenaManager().getArena(event.getPlayer()) == null)
+            return;
         if (event.getMessage().toLowerCase().startsWith("/oitg") || event.getPlayer().hasPermission("oneinthegun.arena.allowcommands"))
             return;
         event.setCancelled(true);
