@@ -69,7 +69,8 @@ public class GameListener implements Listener {
         event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Only OITG commands are permitted in an arena.");
     }
 
-    @EventHandler
+    @SuppressWarnings("deprecation")
+	@EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player defender = (event.getEntity() instanceof Player ? (Player) event.getEntity() : null),
                 attacker = (event.getDamager() instanceof Player ? (Player) event.getDamager() : null);
@@ -106,7 +107,8 @@ public class GameListener implements Listener {
                             return;
                         defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was sniped by " +
                                 ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
-                        attacker.getInventory().addItem(new ItemStack(Material.ARROW, 2));
+                        attacker.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+                        attacker.updateInventory();
                         defenderArena.killPlayer(defender);
                         defenderArena.incrementKills(attacker);
                         attacker.playSound(attacker.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
