@@ -2,6 +2,7 @@ package com.entrocorp.linearlogic.oneinthegun.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Flying;
@@ -108,6 +109,7 @@ public class GameListener implements Listener {
                         attacker.getInventory().addItem(new ItemStack(Material.ARROW, 2));
                         defenderArena.killPlayer(defender);
                         defenderArena.incrementKills(attacker);
+                        attacker.playSound(attacker.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
                         return;
                     }
                     if ((shooter instanceof Creature || shooter instanceof Flying) && !defenderArena.isMobCombatAllowed()) {
@@ -149,6 +151,7 @@ public class GameListener implements Listener {
                         ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
                 defenderArena.killPlayer(defender);
                 defenderArena.incrementKills(attacker);
+                attacker.playSound(attacker.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
             }
             return;
         }
