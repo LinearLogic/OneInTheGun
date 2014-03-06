@@ -88,7 +88,7 @@ public class GameListener implements Listener {
             }
             if (attacker == null) {
                 if (event.getCause().equals(DamageCause.PROJECTILE)) {
-                    LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
+                    LivingEntity shooter = (LivingEntity) ((Projectile) event.getDamager()).getShooter();
                     if (shooter == null)
                         return;
                     if (shooter instanceof Player) {
