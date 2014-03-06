@@ -147,10 +147,16 @@ public class Arena implements Serializable {
     public void endRound() {
         if (stage != 2)
             return;
-        Player victor = leaderboard.iterator().next().getX();
-        OITG.instance.getServer().broadcastMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD + victor.getName() +
-                ChatColor.GRAY + " emerges victorious from arena " + ChatColor.YELLOW + name + ChatColor.GRAY + "!");
+        final Player victor = leaderboard.iterator().next().getX();
         OITG.instance.getListenerManager().fireVictoryEvent(victor);
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                for (Player player : OITG.instance.getArenaManager().getGlobalLobby().getWorld().getPlayers()) {
+                    player.sendMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD + victor.getName() +
+                        ChatColor.GRAY + " emerges victorious from arena " + ChatColor.YELLOW + name + ChatColor.GRAY + "!");
+                }
+            }
+        }, 10L);
         clearPlayers();
     }
 
