@@ -70,7 +70,7 @@ public class GameListener implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-	@EventHandler
+    @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player defender = (event.getEntity() instanceof Player ? (Player) event.getEntity() : null),
                 attacker = (event.getDamager() instanceof Player ? (Player) event.getDamager() : null);

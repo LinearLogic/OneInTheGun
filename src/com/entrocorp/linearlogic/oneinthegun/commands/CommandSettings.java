@@ -105,6 +105,22 @@ public class CommandSettings extends OITGArenaCommand {
             return;
         }
 
+        if (setting.equals("award-amount")) {
+            if (!checkPermission("oneinthegun.arena.settings.awardamount"))
+                return;
+            double amount = 0.00;
+            try {
+            	amount = Double.parseDouble(args[2]);
+            } catch (NumberFormatException e) { }
+            if (amount < 0.01) {
+                sender.sendMessage(OITG.prefix + "The award amount must be a number greater than 0.00.");
+                return;
+            }
+            arena.setAwardAmount(amount);
+            sender.sendMessage(OITG.prefix + "Updated the award amount for arena " + arena.toString());
+            return;
+        }
+
         boolean flag = false;
         if (args[2].equalsIgnoreCase("on")) {
             flag = true;
