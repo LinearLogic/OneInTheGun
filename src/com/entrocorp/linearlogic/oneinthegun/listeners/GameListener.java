@@ -151,6 +151,10 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
                 defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was killed by " +
                         ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
+                if (!attacker.getInventory().contains(Material.ARROW)) {
+                    attacker.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+                    attacker.updateInventory();
+                }
                 defenderArena.killPlayer(defender);
                 defenderArena.incrementKills(attacker);
                 attacker.playSound(attacker.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
