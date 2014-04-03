@@ -51,6 +51,8 @@ public class Arena implements Serializable {
     private int playerLimit;
     private int timeLimit;
     private int killLimit;
+    
+    private double award;
 
     private SerializableLocation lobby;
     private ArrayList<SerializableLocation> spawns;
@@ -147,10 +149,17 @@ public class Arena implements Serializable {
     public void endRound() {
         if (stage != 2)
             return;
-        Player victor = leaderboard.iterator().next().getX();
-        OITG.instance.getServer().broadcastMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD + victor.getName() +
-                ChatColor.GRAY + " emerges victorious from arena " + ChatColor.YELLOW + name + ChatColor.GRAY + "!");
+        final Player victor = leaderboard.iterator().next().getX();
         OITG.instance.getListenerManager().fireVictoryEvent(victor);
+        OITG.instance.getServer().getScheduler().scheduleSyncDelayedTask(OITG.instance, new Runnable() {
+            public void run() {
+                for (Player player : OITG.instance.getArenaManager().getGlobalLobby().getWorld().getPlayers()) {
+                    player.sendMessage(OITG.prefix + ChatColor.YELLOW + ChatColor.BOLD + victor.getName() +
+                        ChatColor.GRAY + " emerges victorious from arena " + ChatColor.YELLOW + name + ChatColor.GRAY + "!");
+                }
+            }
+        }, 10L);
+        awardPlayer(victor);
         clearPlayers();
     }
 
@@ -402,6 +411,18 @@ public class Arena implements Serializable {
         if (killLimit == limit)
             return;
         killLimit = limit;
+        if (OITG.saveOnEdit)
+            save(false);
+    }
+
+    public double getAwardAmount() {
+        return award;
+    }
+
+    public void setAwardAmount(double amount) {
+        if (award == amount)
+            return;
+        award = amount;
         if (OITG.saveOnEdit)
             save(false);
     }
@@ -810,5 +831,10 @@ public class Arena implements Serializable {
             case 2:
                 return ChatColor.RED + "In game";
         }
+    }
+
+    public void awardPlayer(Player player) {
+        if (OITG.instance.getEconomy() != null)
+            OITG.instance.getEconomy().depositPlayer(player.getName(), award);
     }
 }

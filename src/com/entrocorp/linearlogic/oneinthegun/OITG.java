@@ -1,8 +1,13 @@
 package com.entrocorp.linearlogic.oneinthegun;
 
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.entrocorp.linearlogic.oneinthegun.commands.OITGCommandHandler;
@@ -23,6 +28,8 @@ public class OITG extends JavaPlugin {
     private ArenaManager am;
     private ListenerManager lm;
     private OITGCommandHandler ch;
+    
+    private Economy eco = null;
 
     @Override
     public void onEnable() {
@@ -39,6 +46,8 @@ public class OITG extends JavaPlugin {
         lm.loadListeners();
         logInfo("Loading arenas...");
         am.loadArenas();
+        logInfo("Hooking into vault and economy...");
+        setupEconomy();
         logInfo("Successfully enabled. Game on!");
     }
 
@@ -74,6 +83,19 @@ public class OITG extends JavaPlugin {
                 (float) getConfig().getDouble("global-lobby.yaw"), (float) getConfig().getDouble("global-lobby.pitch")), false);
     }
 
+    private void setupEconomy() {
+        Plugin vault = OITG.instance.getServer().getPluginManager().getPlugin("Vault");
+        if (vault != null & vault instanceof Vault) {
+            RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+            if (economyProvider != null)
+                eco = economyProvider.getProvider();
+            else
+                logInfo("No economy plugin found. Continuing without economy support...");
+        } else {
+            logInfo("Vault not found. Continuing without economy support...");
+        }
+    }
+
     public ArenaManager getArenaManager() {
         return am;
     }
@@ -92,5 +114,9 @@ public class OITG extends JavaPlugin {
 
     public void logSevere(String msg) {
         getLogger().severe(msg);
+    }
+    
+    public Economy getEconomy() {
+    	return eco;
     }
 }

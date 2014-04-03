@@ -2,6 +2,7 @@ package com.entrocorp.linearlogic.oneinthegun.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Flying;
@@ -68,6 +69,7 @@ public class GameListener implements Listener {
         event.getPlayer().sendMessage(OITG.prefix + ChatColor.RED + "Only OITG commands are permitted in an arena.");
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Player defender = (event.getEntity() instanceof Player ? (Player) event.getEntity() : null),
@@ -88,7 +90,7 @@ public class GameListener implements Listener {
             }
             if (attacker == null) {
                 if (event.getCause().equals(DamageCause.PROJECTILE)) {
-                    LivingEntity shooter = ((Projectile) event.getDamager()).getShooter();
+                    LivingEntity shooter = (LivingEntity) ((Projectile) event.getDamager()).getShooter();
                     if (shooter == null)
                         return;
                     if (shooter instanceof Player) {
@@ -105,9 +107,11 @@ public class GameListener implements Listener {
                             return;
                         defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was sniped by " +
                                 ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
-                        attacker.getInventory().addItem(new ItemStack(Material.ARROW, 2));
+                        attacker.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+                        attacker.updateInventory();
                         defenderArena.killPlayer(defender);
                         defenderArena.incrementKills(attacker);
+                        attacker.playSound(attacker.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
                         return;
                     }
                     if ((shooter instanceof Creature || shooter instanceof Flying) && !defenderArena.isMobCombatAllowed()) {
@@ -147,8 +151,13 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
                 defenderArena.broadcast(ChatColor.GOLD + defender.getName() + ChatColor.GRAY + " was killed by " +
                         ChatColor.GOLD + attacker.getName() + ChatColor.GRAY + "!");
+                if (!attacker.getInventory().contains(Material.ARROW)) {
+                    attacker.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+                    attacker.updateInventory();
+                }
                 defenderArena.killPlayer(defender);
                 defenderArena.incrementKills(attacker);
+                attacker.playSound(attacker.getLocation(), Sound.ORB_PICKUP, 1F, 0F);
             }
             return;
         }
